@@ -8,6 +8,7 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') })
 
 // Connexion base de données
 const pool = require('./config/database')
+const connectMongoDB = require('./config/mongodb')
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -15,6 +16,9 @@ const PORT = process.env.PORT || 3000
 // Middlewares
 app.use(cors())
 app.use(express.json())
+
+// Connexion MongoDB
+connectMongoDB()
 
 // Route de test
 app.get('/', (req, res) => {
