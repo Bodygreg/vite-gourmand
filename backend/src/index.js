@@ -3,7 +3,11 @@ const cors = require('cors')
 const dotenv = require('dotenv')
 
 // Chargement des variables d'environnement
-dotenv.config()
+const path = require('path')
+dotenv.config({ path: path.resolve(__dirname, '../.env') })
+
+// Connexion base de données
+const pool = require('./config/database')
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -21,3 +25,4 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Serveur démarré sur le port ${PORT}`)
 })
+
