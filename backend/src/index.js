@@ -13,6 +13,7 @@ const connectMongoDB = require('./config/mongodb')
 // Import des routes
 const authRoutes = require('./routes/authRoutes')
 const menuRoutes = require('./routes/menuRoutes')
+const commandeRoutes = require('./routes/commandeRoutes')
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -27,6 +28,7 @@ connectMongoDB()
 // Routes
 app.use('/api/auth', authRoutes)
 app.use('/api/menus', menuRoutes)
+app.use('/api/commandes', commandeRoutes)
 
 // Route de test
 app.get('/', (req, res) => {
