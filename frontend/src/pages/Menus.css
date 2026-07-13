@@ -1,0 +1,206 @@
+/* ── BANDEAU ─────────────────────────────────────── */
+.menus-bandeau {
+  height: 200px;
+  background-image: url('https://images.unsplash.com/photo-1555244162-803834f70033?w=1400');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 4rem;
+  position: relative;
+}
+
+.menus-bandeau::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(28, 28, 28, 0.6);
+}
+
+.menus-bandeau h1 {
+  position: relative;
+  z-index: 1;
+  color: var(--texte-principal);
+  font-size: 2.5rem;
+}
+
+/* ── FILTRES ─────────────────────────────────────── */
+.filtres-container {
+  background-color: var(--fond-secondaire);
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgba(200, 135, 58, 0.2);
+}
+
+.filtres-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--accent-ambre);
+  color: var(--texte-sombre);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.filtres-panel {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(200, 135, 58, 0.2);
+}
+
+.filtres-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filtre-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.filtre-group label {
+  font-size: 0.85rem;
+  color: var(--texte-sombre);
+  font-weight: 500;
+}
+
+.filtre-group input,
+.filtre-group select {
+  padding: 0.5rem;
+  border: 1px solid var(--texte-secondaire);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background-color: white;
+  color: var(--texte-sombre);
+}
+
+.filtres-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* ── GRILLE MENUS ────────────────────────────────── */
+.menus-page .container {
+  padding: 3rem 2rem;
+  background-color: var(--fond-secondaire);
+}
+
+.menus-page-content {
+  background-color: var(--fond-secondaire);
+  width: 100%;
+}
+
+.menus-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.no-menus {
+  text-align: center;
+  color: var(--texte-secondaire);
+  font-size: 1.1rem;
+  padding: 3rem 0;
+}
+
+/* ── CARD MENU ───────────────────────────────────── */
+.menu-card {
+  background-color: var(--fond-principal);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(200, 135, 58, 0.15);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.menu-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.menu-card-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.menu-card-content {
+  padding: 1.5rem;
+}
+
+.menu-card-content h3 {
+  color: var(--accent-ambre);
+  font-size: 1.3rem;
+  margin-bottom: 0.8rem;
+}
+
+.menu-card-content p {
+  color: var(--texte-secondaire);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.menu-card-infos {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.menu-card-infos span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--texte-principal);
+  font-size: 0.9rem;
+}
+
+.menu-card-badges {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  background-color: rgba(200, 135, 58, 0.15);
+  border: 1px solid var(--accent-ambre);
+  color: var(--accent-ambre);
+  padding: 0.2rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.menu-card .btn-outline {
+  width: 100%;
+  text-align: center;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 1024px) {
+  .menus-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .filtres-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .menus-grid {
+    grid-template-columns: 1fr;
+  }
+  .filtres-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
