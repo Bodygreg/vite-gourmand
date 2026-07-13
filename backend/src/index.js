@@ -16,6 +16,9 @@ const menuRoutes = require('./routes/menuRoutes')
 const commandeRoutes = require('./routes/commandeRoutes')
 const avisRoutes = require('./routes/avisRoutes')
 const utilisateurRoutes = require('./routes/utilisateurRoutes')
+const adminRoutes = require('./routes/adminRoutes')
+const horaireRoutes = require('./routes/horaireRoutes')
+const contactRoutes = require('./routes/contactRoutes')
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -33,6 +36,9 @@ app.use('/api/menus', menuRoutes)
 app.use('/api/commandes', commandeRoutes)
 app.use('/api/avis', avisRoutes)
 app.use('/api/utilisateurs', utilisateurRoutes)
+app.use('/api/admin', adminRoutes)
+app.use('/api/horaires', horaireRoutes)
+app.use('/api/contact', contactRoutes)
 
 // Route de test
 app.get('/', (req, res) => {
