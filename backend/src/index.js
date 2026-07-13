@@ -15,6 +15,7 @@ const authRoutes = require('./routes/authRoutes')
 const menuRoutes = require('./routes/menuRoutes')
 const commandeRoutes = require('./routes/commandeRoutes')
 const avisRoutes = require('./routes/avisRoutes')
+const utilisateurRoutes = require('./routes/utilisateurRoutes')
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -31,6 +32,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/menus', menuRoutes)
 app.use('/api/commandes', commandeRoutes)
 app.use('/api/avis', avisRoutes)
+app.use('/api/utilisateurs', utilisateurRoutes)
 
 // Route de test
 app.get('/', (req, res) => {
