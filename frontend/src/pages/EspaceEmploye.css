@@ -1,0 +1,251 @@
+/* ── PAGE ESPACE EMPLOYÉ ─────────────────────────── */
+.espace-employe {
+  background-color: var(--fond-secondaire);
+  min-height: calc(100vh - 70px - 200px);
+  padding: 3rem 0;
+}
+
+.espace-employe .container {
+  max-width: 1100px;
+}
+
+.espace-employe h1 {
+  color: var(--texte-sombre);
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* ── FILTRES ─────────────────────────────────────── */
+.employe-filtres {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filtre-search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: white;
+  border: 1px solid rgba(200, 135, 58, 0.3);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  flex: 1;
+}
+
+.filtre-search input {
+  border: none;
+  outline: none;
+  font-size: 0.95rem;
+  width: 100%;
+  color: var(--texte-sombre);
+  font-family: 'Inter', sans-serif;
+}
+
+.employe-filtres select {
+  padding: 0.5rem rem;
+  border: 1px solid rgba(200, 135, 58, 0.3);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--texte-sombre);
+  font-family: 'Inter', sans-serif;
+  background-color: white;
+  cursor: pointer;
+}
+
+/* ── LISTE COMMANDES ─────────────────────────────── */
+.employe-commandes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.employe-commande-item {
+  background-color: var(--fond-principal);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(200, 135, 58, 0.15);
+}
+
+.employe-commande-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.employe-commande-header h3 {
+  color: var(--accent-ambre);
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+
+.employe-commande-header p {
+  color: var(--texte-secondaire);
+  font-size: 0.85rem;
+}
+
+.employe-commande-infos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  color: var(--texte-principal);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.employe-commande-actions {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(200, 135, 58, 0.1);
+}
+
+/* ── MODAL ───────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: var(--fond-secondaire);
+  border-radius: 16px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal h2 {
+  color: var(--texte-sombre);
+  margin-bottom: 1rem;
+}
+
+.modal p {
+  color: var(--texte-sombre);
+  margin-bottom: 0.5rem;
+}
+
+.modal .form-group {
+  margin: 1.5rem 0;
+}
+
+.modal .form-group label {
+  display: block;
+  color: var(--texte-sombre);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.modal .form-group select,
+.modal .form-group textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid rgba(200, 135, 58, 0.3);
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  color: var(--texte-sombre);
+}
+
+.modal .form-group textarea {
+  resize: vertical;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* ── AVIS MODÉRATION ─────────────────────────────── */
+.avis-moderation {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.avis-item {
+  background-color: var(--fond-principal);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(200, 135, 58, 0.15);
+}
+
+.avis-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.avis-etoiles {
+  color: var(--accent-ambre);
+  font-size: 1.2rem;
+  margin-right: 1rem;
+}
+
+.avis-auteur {
+  color: var(--texte-principal);
+  font-weight: 500;
+}
+
+.avis-statut {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+}
+
+.avis-statut.en.attente {
+  color: var(--accent-ambre);
+  background-color: rgba(200, 135, 58, 0.1);
+}
+
+.avis-statut.validé {
+  color: var(--bouton-succes);
+  background-color: rgba(45, 158, 107, 0.1);
+}
+
+.avis-statut.refusé {
+  color: var(--bouton-danger);
+  background-color: rgba(217, 79, 61, 0.1);
+}
+
+.avis-description {
+  color: var(--texte-principal);
+  font-style: italic;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.avis-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-succes {
+  background-color: var(--bouton-succes);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .employe-filtres {
+    flex-direction: column;
+  }
+
+  .employe-commande-infos {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

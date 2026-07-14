@@ -19,6 +19,11 @@
   --texte-secondaire: #9A9A8A;
 }
 
+/* Alignement global des icônes Lucide */
+svg {
+  vertical-align: middle;
+}
+
 /* ── RESET ─────────────────────────────────────────── */
 * {
   margin: 0;
