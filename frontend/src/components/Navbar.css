@@ -39,6 +39,12 @@
   transition: color 0.2s;
 }
 
+.navbar-links a.active {
+  color: var(--bouton-hover);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .navbar-links a:hover {
   color: var(--bouton-hover);
 }
@@ -64,7 +70,7 @@
   display: none;
   background: none;
   border: none;
-  color: var(--texte-principal);
+  color: var(--accent-ambre);
   font-size: 1.8rem;
   cursor: pointer;
 }

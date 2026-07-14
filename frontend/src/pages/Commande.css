@@ -1,0 +1,334 @@
+/* ── PAGE COMMANDE ───────────────────────────────── */
+.commande-page {
+  background-color: var(--fond-secondaire);
+  min-height: calc(100vh - 70px - 200px);
+  padding: 3rem 0;
+}
+
+.commande-page .container {
+  max-width: 800px;
+}
+
+.commande-page h1 {
+  color: var(--texte-sombre);
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* ── STEPPER ─────────────────────────────────────── */
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 3rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--texte-secondaire);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--texte-secondaire);
+  background-color: transparent;
+  font-size: 0.9rem;
+}
+
+.step.active .step-circle {
+  border-color: var(--bouton-primaire);
+  background-color: var(--bouton-primaire);
+  color: white;
+}
+
+.step.done .step-circle {
+  border-color: var(--bouton-succes);
+  background-color: var(--bouton-succes);
+  color: white;
+}
+
+.step span {
+  font-size: 0.85rem;
+  color: var(--texte-secondaire);
+  white-space: nowrap;
+}
+
+.step.active span {
+  color: var(--texte-sombre);
+  font-weight: 600;
+}
+
+.step-line {
+  width: 100px;
+  height: 2px;
+  background-color: var(--texte-secondaire);
+  margin-bottom: 1.2rem;
+}
+
+/* ── FORMULAIRE ──────────────────────────────────── */
+.commande-form {
+  background-color: var(--fond-principal);
+  border-radius: 16px;
+  padding: 2.5rem;
+}
+
+.commande-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.commande-form label {
+  display: block;
+  color: var(--texte-principal);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.commande-form input,
+.commande-form select {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(200, 135, 58, 0.3);
+  border-radius: 8px;
+  color: var(--texte-principal);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.commande-form input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.commande-form input:focus,
+.commande-form select:focus {
+  outline: none;
+  border-color: var(--accent-ambre);
+}
+
+.commande-form select option {
+  background-color: var(--fond-principal);
+  color: var(--texte-principal);
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.frais-livraison {
+  color: var(--texte-secondaire);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ── COMPTEUR ────────────────────────────────────── */
+.compteur {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.commande-form .compteur-input {
+  width: 80px;
+  padding: 0.4rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.compteur button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-ambre);
+  background: transparent;
+  color: var(--accent-ambre);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.compteur button:hover {
+  background-color: var(--accent-ambre);
+  color: rgb(255, 255, 255);
+}
+
+.compteur span {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--texte-principal);
+  min-width: 2rem;
+  text-align: center;
+}
+
+.menu-minimum {
+  color: var(--accent-ambre);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+/* Masquer les spinners du input number */
+.compteur-input::-webkit-outer-spin-button,
+.compteur-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.compteur-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* ── RÉDUCTION ───────────────────────────────────── */
+.reduction-badge {
+  background-color: rgba(45, 158, 107, 0.15);
+  border: 1px solid var(--bouton-succes);
+  color: var(--bouton-succes);
+  padding: 1rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* ── NAVIGATION ──────────────────────────────────── */
+.commande-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(200, 135, 58, 0.15);
+}
+
+/* ── RÉCAPITULATIF ───────────────────────────────── */
+.recap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.recap-card {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(200, 135, 58, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.recap-card h3 {
+  color: var(--accent-ambre);
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.recap-card p {
+  color: var(--texte-principal);
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.recap-prix {
+  margin-top: 1rem;
+}
+
+.prix-ligne {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(200, 135, 58, 0.1);
+  color: var(--texte-principal);
+  font-size: 0.9rem;
+}
+
+.prix-ligne.reduction {
+  color: var(--bouton-succes);
+}
+
+.prix-ligne.total {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent-ambre);
+  border-bottom: none;
+  margin-top: 0.5rem;
+}
+
+/* ── SUCCÈS ──────────────────────────────────────── */
+.commande-success {
+  max-width: 500px;
+  margin: 5rem auto;
+  text-align: center;
+  background-color: var(--fond-principal);
+  border-radius: 16px;
+  padding: 3rem;
+}
+
+.commande-success h1 {
+  color: var(--bouton-succes);
+  margin-bottom: 1rem;
+}
+
+.commande-success p {
+  color: var(--texte-principal);
+  margin-bottom: 0.5rem;
+}
+
+.success-prix {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+
+.success-prix p {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+}
+
+.success-prix .total {
+  font-weight: 700;
+  color: var(--accent-ambre);
+  font-size: 1.1rem;
+  border-top: 1px solid rgba(200, 135, 58, 0.3);
+  padding-top: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .recap-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step span {
+    display: none;
+  }
+
+  .step-line {
+    width: 50px;
+  }
+}

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useState } from 'react'
 import './Navbar.css'
@@ -18,9 +18,9 @@ const Navbar = () => {
       <div className="navbar-container">
 
         {/* Logo */}
-        <Link to="/" className="navbar-logo">
+        <NavLink to="/" className="navbar-logo">
           Vite & Gourmand
-        </Link>
+        </NavLink>
 
         {/* Menu burger (mobile) */}
         <button 
@@ -33,43 +33,43 @@ const Navbar = () => {
         {/* Liens navigation */}
         <ul className={`navbar-links ${menuOpen ? 'open' : ''}`}>
           <li>
-            <Link to="/" onClick={() => setMenuOpen(false)}>
+            <NavLink to="/" onClick={() => setMenuOpen(false)}>
               Accueil
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/menus" onClick={() => setMenuOpen(false)}>
+            <NavLink to="/menus" onClick={() => setMenuOpen(false)}>
               Nos menus
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link to="/contact" onClick={() => setMenuOpen(false)}>
+            <NavLink to="/contact" onClick={() => setMenuOpen(false)}>
               Contact
-            </Link>
+            </NavLink>
           </li>
 
           {/* Liens selon le rôle */}
           {isAuthenticated && (
             <li>
-              <Link to="/mon-espace" onClick={() => setMenuOpen(false)}>
+              <NavLink to="/mon-espace" onClick={() => setMenuOpen(false)}>
                 Mon espace
-              </Link>
+              </NavLink>
             </li>
           )}
 
           {hasRole(['employe', 'administrateur']) && (
             <li>
-              <Link to="/espace-employe" onClick={() => setMenuOpen(false)}>
+              <NavLink to="/espace-employe" onClick={() => setMenuOpen(false)}>
                 Espace employé
-              </Link>
+              </NavLink>
             </li>
           )}
 
           {hasRole(['administrateur']) && (
             <li>
-              <Link to="/espace-admin" onClick={() => setMenuOpen(false)}>
+              <NavLink to="/espace-admin" onClick={() => setMenuOpen(false)}>
                 Admin
-              </Link>
+              </NavLink>
             </li>
           )}
         </ul>
@@ -87,9 +87,9 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <Link to="/login">
+            <NavLink to="/login">
               <button className="btn-primaire">Connexion</button>
-            </Link>
+            </NavLink>
           )}
         </div>
 
