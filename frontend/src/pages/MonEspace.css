@@ -1,0 +1,209 @@
+/* ── PAGE MON ESPACE ─────────────────────────────── */
+.mon-espace {
+  background-color: var(--fond-secondaire);
+  min-height: calc(100vh - 70px - 200px);
+  padding: 3rem 0;
+}
+
+.mon-espace .container {
+  max-width: 900px;
+}
+
+.mon-espace h1 {
+  color: var(--texte-sombre);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.espace-subtitle {
+  color: var(--texte-secondaire);
+  margin-bottom: 2rem;
+}
+
+/* ── ONGLETS ─────────────────────────────────────── */
+.onglets {
+  display: flex;
+  gap: 0;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid rgba(200, 135, 58, 0.2);
+}
+
+.onglet {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--texte-secondaire);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+
+.onglet:hover {
+  color: var(--texte-sombre);
+}
+
+.onglet.active {
+  color: var(--bouton-primaire);
+  border-bottom-color: var(--bouton-primaire);
+  font-weight: 600;
+}
+
+/* ── LISTE COMMANDES ─────────────────────────────── */
+.commandes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.commande-item {
+  background-color: var(--fond-principal);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(200, 135, 58, 0.15);
+}
+
+.commande-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.commande-item-header h3 {
+  color: var(--accent-ambre);
+  font-size: 1.1rem;
+}
+
+.statut-badge {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.commande-item-infos {
+  display: flex;
+  gap: 1.5rem;
+  color: var(--texte-principal);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.commande-item-actions {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(200, 135, 58, 0.1);
+}
+
+.commande-item-actions .btn-danger {
+  padding: 0.5rem 1.2rem;
+  font-size: 0.9rem;
+}
+
+.commande-item-actions .btn-outline {
+  padding: 0.5rem 1.2rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ── EMPTY STATE ─────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 4rem 0;
+  color: var(--texte-secondaire);
+}
+
+.empty-state p {
+  margin: 1rem 0;
+  font-size: 1.1rem;
+}
+
+/* ── PROFIL FORM ─────────────────────────────────── */
+.profil-form {
+  background-color: var(--fond-principal);
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+.profil-form h2 {
+  color: var(--accent-ambre);
+  margin-bottom: 1.5rem;
+}
+
+.profil-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.profil-form label {
+  display: block;
+  color: var(--texte-principal);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.profil-form input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(200, 135, 58, 0.3);
+  border-radius: 8px;
+  color: var(--texte-principal);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.profil-form input:disabled {
+  opacity: 0.5;
+}
+
+.profil-form input:focus {
+  outline: none;
+  border-color: var(--accent-ambre);
+}
+
+.profil-form textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(200, 135, 58, 0.3);
+  border-radius: 8px;
+  color: var(--texte-principal);
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  resize: vertical;
+}
+
+.profil-form textarea:focus {
+  outline: none;
+  border-color: var(--accent-ambre);
+}
+
+/* ── ÉTOILES ─────────────────────────────────────── */
+.etoiles-selector {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 768px) {
+  .commande-item-infos {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .onglet span {
+    display: none;
+  }
+}
