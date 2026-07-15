@@ -20,11 +20,18 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showConfirm, setShowConfirm] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
     setLoading(true)
+    if (formData.password !== confirmPassword) {
+      setError('Les mots de passe ne correspondent pas')
+      setLoading(false)
+      return
+    }
 
     try {
       await api.post('/auth/register', formData)
@@ -113,6 +120,31 @@ const Register = () => {
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword
+                  ? <EyeOff size={18} color="var(--texte-secondaire)" />
+                  : <Eye size={18} color="var(--texte-secondaire)" />
+                }
+              </button>
+            </div>
+          </div>
+
+          {/* Confirmer le mot de passe */}
+          <div className="form-group">
+            <label>Confirmer le mot de passe</label>
+            <div className="input-icon">
+              <Lock size={18} color="var(--texte-secondaire)" />
+              <input
+                type={showConfirm ? 'text' : 'password'}
+                placeholder="Répétez votre mot de passe"
+                value={confirmPassword}
+                onChange={e => setConfirmPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="toggle-password"
+                onClick={() => setShowConfirm(!showConfirm)}
+              >
+                {showConfirm
                   ? <EyeOff size={18} color="var(--texte-secondaire)" />
                   : <Eye size={18} color="var(--texte-secondaire)" />
                 }

@@ -10,11 +10,38 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD
-  },
-  tls: {
-    rejectUnauthorized: false
   }
 })
+
+// Reset password
+const resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body
+
+    // Vérifier le token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+    // Vérifier complexité mot de passe
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({ 
+        message: 'Le mot de passe doit contenir au moins 10 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial' 
+      })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    await pool.query(
+      'UPDATE utilisateur SET password = ? WHERE utilisateur_id = ?',
+      [hashedPassword, decoded.id]
+    )
+
+    res.json({ message: 'Mot de passe réinitialisé avec succès' })
+
+  } catch (error) {
+    res.status(400).json({ message: 'Lien invalide ou expiré' })
+  }
+}
 
 // ── INSCRIPTION ──────────────────────────────────────
 const register = async (req, res) => {
@@ -221,4 +248,4 @@ const forgotPassword = async (req, res) => {
   }
 }
 
-module.exports = { register, login, getMe, forgotPassword }
+module.exports = { register, login, getMe, forgotPassword, resetPassword }

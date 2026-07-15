@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { register, login, getMe, forgotPassword } = require('../controllers/authController')
+const { register, login, getMe, forgotPassword, resetPassword } = require('../controllers/authController')
 const { authMiddleware } = require('../middlewares/authMiddleware')
 
 // Routes publiques (pas besoin d'être connecté)
@@ -10,5 +10,6 @@ router.post('/forgot-password', forgotPassword)
 
 // Routes protégées (token JWT obligatoire)
 router.get('/me', authMiddleware, getMe)
+router.post('/reset-password', resetPassword)
 
 module.exports = router
