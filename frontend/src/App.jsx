@@ -13,6 +13,7 @@ import EspaceEmploye from './pages/EspaceEmploye'
 import EspaceAdmin from './pages/EspaceAdmin'
 import Contact from './pages/Contact'
 import ResetPassword from './pages/ResetPassword'
+import ForgotPassword from './pages/ForgotPassword'
 
 // Composants
 import Navbar from './components/Navbar'
@@ -43,6 +44,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
 
           {/* Routes utilisateur connecté */}
           <Route path="/commande" element={
