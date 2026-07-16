@@ -17,6 +17,37 @@ const Commande = () => {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(null)
 
+  const [horaires, setHoraires] = useState([])
+
+  useEffect(() => {
+    Promise.all([
+      api.get('/menus'),
+      api.get('/horaires')
+    ]).then(([menusRes, horairesRes]) => {
+      setMenus(menusRes.data)
+      setHoraires(horairesRes.data)
+      if (menuIdParam) {
+        const menu = menusRes.data.find(m => m.menu_id === parseInt(menuIdParam))
+        if (menu) {
+          setFormData(prev => ({...prev, nb_personnes: menu.nb_personnes_min}))
+        }
+      }
+    })
+  }, [])
+
+  const getHorairesDuJour = () => {
+    if (!formData.date_prestation) return { min: '09:00', max: '19:00' }
+    
+    const jours = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi']
+    const date = new Date(formData.date_prestation)
+    const jourNom = jours[date.getDay()]
+    
+    const horaire = horaires.find(h => h.jour === jourNom)
+    return horaire 
+      ? { min: horaire.heure_ouverture, max: horaire.heure_fermeture }
+      : { min: '09:00', max: '19:00' }
+  }
+
   const [formData, setFormData] = useState({
     // Étape 1
     adresse_livraison: user?.adresse || '',
@@ -28,33 +59,57 @@ const Commande = () => {
     nb_personnes: 1
   })
 
+  // Date minimum = aujourd'hui + 48h
+  const getDateMin = () => {
+    const date = new Date()
+    date.setHours(date.getHours() + 48)
+    return date.toISOString().split('T')[0]
+  }
+
   useEffect(() => {
-    api.get('/menus').then(res => setMenus(res.data))
+    api.get('/menus').then(res => {
+      setMenus(res.data)
+      // Si un menu est pré-sélectionné (depuis bouton Commander)
+      if (menuIdParam) {
+        const menu = res.data.find(m => m.menu_id === parseInt(menuIdParam))
+        if (menu) {
+          setFormData(prev => ({
+            ...prev,
+            nb_personnes: menu.nb_personnes_min
+          }))
+        }
+      }
+    })
   }, [])
 
   // Menu sélectionné
   const menuSelectionne = menus.find(m => m.menu_id === parseInt(formData.menu_id))
 
   // Calcul prix
-  const calculPrix = () => {
-    if (!menuSelectionne) return { prix_menu: 0, prix_livraison: 5, total: 5 }
+const calculPrix = () => {
+  if (!menuSelectionne) return { prix_menu: 0, prix_livraison: 5, total: 5 }
 
-    let prix_menu = menuSelectionne.prix
-    if (formData.nb_personnes >= menuSelectionne.nb_personnes_min + 5) {
-      prix_menu = prix_menu * 0.9
-    }
+  let prix_unitaire = menuSelectionne.prix
+  
+  // Prix total = prix unitaire × nb personnes
+  let prix_menu = prix_unitaire * formData.nb_personnes
 
-    const prix_livraison = formData.ville_livraison.toLowerCase().trim() === 'bordeaux'
-      ? 5
-      : 5 + (20 * 0.59)
-
-    return {
-      prix_menu: prix_menu.toFixed(2),
-      prix_livraison: prix_livraison.toFixed(2),
-      total: (prix_menu + prix_livraison).toFixed(2),
-      reduction: formData.nb_personnes >= menuSelectionne.nb_personnes_min + 5
-    }
+  // Réduction 10% si 5 personnes de plus que le minimum
+  if (formData.nb_personnes >= menuSelectionne.nb_personnes_min + 5) {
+    prix_menu = prix_menu * 0.9
   }
+
+  const prix_livraison = formData.ville_livraison.toLowerCase().trim() === 'bordeaux'
+    ? 5
+    : 5 + (20 * 0.59)
+
+  return {
+    prix_menu: prix_menu.toFixed(2),
+    prix_livraison: prix_livraison.toFixed(2),
+    total: (prix_menu + prix_livraison).toFixed(2),
+    reduction: formData.nb_personnes >= menuSelectionne.nb_personnes_min + 5
+  }
+}
 
   const prix = calculPrix()
 
@@ -73,6 +128,13 @@ const Commande = () => {
     } finally {
       setLoading(false)
     }
+  }
+
+  const validerHeure = () => {
+    if (!formData.heure_livraison || !formData.date_prestation) return false
+    const horaires_jour = getHorairesDuJour()
+    const heure = formData.heure_livraison
+    return heure >= horaires_jour.min && heure <= horaires_jour.max
   }
 
   if (success) {
@@ -112,8 +174,7 @@ const Commande = () => {
             </>
           ))}
         </div>
-
-        {error && <div className="auth-error">{error}</div>}
+      
 
         {/* ── ÉTAPE 1 ──────────────────────────────── */}
         {etape === 1 && (
@@ -154,6 +215,7 @@ const Commande = () => {
                 <input
                   type="date"
                   value={formData.date_prestation}
+                  min={getDateMin()}
                   onChange={e => setFormData({...formData, date_prestation: e.target.value})}
                   required
                 />
@@ -165,6 +227,8 @@ const Commande = () => {
                 <input
                   type="time"
                   value={formData.heure_livraison}
+                  min={getHorairesDuJour().min}
+                  max={getHorairesDuJour().max}
                   onChange={e => setFormData({...formData, heure_livraison: e.target.value})}
                   required
                 />
@@ -188,10 +252,25 @@ const Commande = () => {
             </p>
             <div className="commande-nav">
               <div></div>
+              {error && (
+                <p className="commande-nav-error">{error}</p>
+              )}
               <button
                 className="btn-primaire"
-                onClick={() => setEtape(2)}
-                disabled={!formData.adresse_livraison || !formData.ville_livraison || !formData.date_prestation || !formData.heure_livraison}
+                onClick={() => {
+                  if (!validerHeure()) {
+                    setError(`L'heure de livraison doit être comprise entre ${getHorairesDuJour().min} et ${getHorairesDuJour().max}`)
+                    return
+                  }
+                  setError('')
+                  setEtape(2)
+                }}
+                disabled={
+                  !formData.adresse_livraison || 
+                  !formData.ville_livraison || 
+                  !formData.date_prestation || 
+                  !formData.heure_livraison
+                }
               >
                 Étape suivante →
               </button>
@@ -206,7 +285,14 @@ const Commande = () => {
               <label>Menu</label>
               <select
                 value={formData.menu_id}
-                onChange={e => setFormData({...formData, menu_id: e.target.value, nb_personnes: menus.find(m => m.menu_id === parseInt(e.target.value))?.nb_personnes_min || 1})}
+                onChange={e => {
+                  const selectedMenu = menus.find(m => m.menu_id === parseInt(e.target.value))
+                  setFormData({
+                    ...formData, 
+                    menu_id: e.target.value,
+                    nb_personnes: selectedMenu?.nb_personnes_min || 1
+                  })
+                }}
               >
                 <option value="">Sélectionnez un menu</option>
                 {menus.map(m => (
@@ -278,7 +364,11 @@ const Commande = () => {
               <button
                 className="btn-primaire"
                 onClick={() => setEtape(3)}
-                disabled={!formData.menu_id}
+                disabled={
+                  !formData.menu_id || 
+                  !menuSelectionne ||
+                  formData.nb_personnes < menuSelectionne?.nb_personnes_min
+                }
               >
                 Étape suivante →
               </button>
@@ -293,17 +383,23 @@ const Commande = () => {
 
               {/* Bloc commande */}
               <div className="recap-card">
-                <h3><UtensilsCrossed size={18} color="var(--accent-ambre)" /> {menuSelectionne?.titre}</h3>
-                <h3>{formData.nb_personnes} personnes</h3>
+                <h3>
+                  <UtensilsCrossed size={18} color="var(--accent-ambre)" />
+                  {menuSelectionne?.titre} — {formData.nb_personnes} personnes
+                </h3>
                 <div className="recap-prix">
                   <div className="prix-ligne">
-                    <span>Prix menu</span>
-                    <span>{prix.prix_menu}€</span>
+                    <span>Prix unitaire</span>
+                    <span>{menuSelectionne?.prix}€ / pers.</span>
+                  </div>
+                  <div className="prix-ligne">
+                    <span>Nombre de personnes</span>
+                    <span>{formData.nb_personnes}</span>
                   </div>
                   {prix.reduction && (
                     <div className="prix-ligne reduction">
                       <span>Réduction (10%)</span>
-                      <span>- {(menuSelectionne.prix * 0.1).toFixed(2)}€</span>
+                      <span>- {(menuSelectionne.prix * formData.nb_personnes * 0.1).toFixed(2)}€</span>
                     </div>
                   )}
                   <div className="prix-ligne">

@@ -71,6 +71,7 @@ const Contact = () => {
                   <input
                     type="email"
                     placeholder="votre@email.fr"
+                    autoComplete="new-password"
                     value={formData.email}
                     onChange={e => setFormData({...formData, email: e.target.value})}
                     required

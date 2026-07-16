@@ -63,7 +63,7 @@ const createCommande = async (req, res) => {
     }
 
     // Calcul du prix
-    let prix_menu = menu.prix
+    let prix_menu = menu.prix * nb_personnes
 
     // Réduction 10% si 5 personnes de plus que le minimum
     if (nb_personnes >= menu.nb_personnes_min + 5) {

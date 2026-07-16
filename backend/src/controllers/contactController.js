@@ -20,10 +20,15 @@ const sendContact = async (req, res) => {
       })
     }
 
+    // Logs temporaires de débogage
+    console.log('EMAIL_USER:', process.env.EMAIL_USER)
+    console.log('email reçu:', email)
+
     try {
       await transporter.sendMail({
-        from: email,
-        to: process.env.EMAIL_USER,
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_TO,
+        replyTo: email,          
         subject: `Contact - ${titre}`,
         html: `
           <h2>${titre}</h2>

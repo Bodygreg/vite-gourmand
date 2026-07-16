@@ -19,6 +19,16 @@
   --texte-secondaire: #9A9A8A;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+input:-webkit-autofill:selected {
+  -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.05) inset !important;
+  -webkit-text-fill-color: var(--texte-principal) !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 /* Alignement global des icônes Lucide */
 svg {
   vertical-align: middle;

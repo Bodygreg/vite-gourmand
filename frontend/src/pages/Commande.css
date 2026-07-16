@@ -216,6 +216,13 @@
   border-top: 1px solid rgba(200, 135, 58, 0.15);
 }
 
+.commande-nav-error {
+  color: var(--bouton-danger);
+  font-size: 0.85rem;
+  text-align: center;
+  flex: 1;
+}
+
 /* ── RÉCAPITULATIF ───────────────────────────────── */
 .recap-grid {
   display: grid;
