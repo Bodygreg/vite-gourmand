@@ -1,66 +1,22 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const pool = require('../config/database')
-const nodemailer = require('nodemailer')
-
-// Configuration email
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  }
-})
-
-// Reset password
-const resetPassword = async (req, res) => {
-  try {
-    const { token, password } = req.body
-
-    // Vérifier le token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
-    // Vérifier complexité mot de passe
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/
-    if (!passwordRegex.test(password)) {
-      return res.status(400).json({ 
-        message: 'Le mot de passe doit contenir au moins 10 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial' 
-      })
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10)
-
-    await pool.query(
-      'UPDATE utilisateur SET password = ? WHERE utilisateur_id = ?',
-      [hashedPassword, decoded.id]
-    )
-
-    res.json({ message: 'Mot de passe réinitialisé avec succès' })
-
-  } catch (error) {
-    res.status(400).json({ message: 'Lien invalide ou expiré' })
-  }
-}
+const sendEmail = require('../utils/email')
 
 // ── INSCRIPTION ──────────────────────────────────────
 const register = async (req, res) => {
   try {
     const { nom, prenom, email, password, telephone, adresse, ville, code_postal } = req.body
 
-    // Vérifier que l'email n'existe pas déjà
     const [existingUser] = await pool.query(
       'SELECT * FROM utilisateur WHERE email = ?',
       [email]
     )
 
     if (existingUser.length > 0) {
-      return res.status(400).json({ 
-        message: 'Cet email est déjà utilisé' 
-      })
+      return res.status(400).json({ message: 'Cet email est déjà utilisé' })
     }
 
-    // Vérifier la complexité du mot de passe
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/
     if (!passwordRegex.test(password)) {
       return res.status(400).json({ 
@@ -68,10 +24,8 @@ const register = async (req, res) => {
       })
     }
 
-    // Hasher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Insérer l'utilisateur (rôle 3 = utilisateur)
     await pool.query(
       `INSERT INTO utilisateur 
       (role_id, email, password, nom, prenom, telephone, adresse, ville, code_postal) 
@@ -79,10 +33,8 @@ const register = async (req, res) => {
       [email, hashedPassword, nom, prenom, telephone, adresse, ville, code_postal]
     )
 
-    // Envoi email — non bloquant
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+      await sendEmail({
         to: email,
         subject: 'Bienvenue chez Vite & Gourmand !',
         html: `
@@ -95,13 +47,9 @@ const register = async (req, res) => {
       })
     } catch (emailError) {
       console.error('Email non envoyé :', emailError.message)
-      // On continue même si l'email échoue
     }
 
-    // Toujours répondre succès
-    res.status(201).json({ 
-      message: 'Compte créé avec succès !' 
-    })
+    res.status(201).json({ message: 'Compte créé avec succès !' })
 
   } catch (error) {
     console.error('Erreur inscription :', error)
@@ -114,7 +62,6 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body
 
-    // Chercher l'utilisateur
     const [users] = await pool.query(
       `SELECT u.*, r.libelle as role 
        FROM utilisateur u 
@@ -124,28 +71,18 @@ const login = async (req, res) => {
     )
 
     if (users.length === 0) {
-      return res.status(401).json({ 
-        message: 'Email ou mot de passe incorrect' 
-      })
+      return res.status(401).json({ message: 'Email ou mot de passe incorrect' })
     }
 
     const user = users[0]
 
-    // Vérifier le mot de passe
     const validPassword = await bcrypt.compare(password, user.password)
     if (!validPassword) {
-      return res.status(401).json({ 
-        message: 'Email ou mot de passe incorrect' 
-      })
+      return res.status(401).json({ message: 'Email ou mot de passe incorrect' })
     }
 
-    // Générer le token JWT
     const token = jwt.sign(
-      { 
-        id: user.utilisateur_id, 
-        email: user.email,
-        role: user.role
-      },
+      { id: user.utilisateur_id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '24h' }
     )
@@ -212,17 +149,14 @@ const forgotPassword = async (req, res) => {
       })
     }
 
-    // Générer un token temporaire (valable 1h)
     const resetToken = jwt.sign(
       { id: users[0].utilisateur_id },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     )
 
-    // Envoi email — non bloquant
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+      await sendEmail({
         to: email,
         subject: 'Réinitialisation de votre mot de passe',
         html: `
@@ -232,6 +166,7 @@ const forgotPassword = async (req, res) => {
             Réinitialiser mon mot de passe
           </a>
           <p>Ce lien est valable 1 heure.</p>
+          <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
         `
       })
     } catch (emailError) {
@@ -245,6 +180,34 @@ const forgotPassword = async (req, res) => {
   } catch (error) {
     console.error('Erreur forgotPassword :', error)
     res.status(500).json({ message: 'Erreur serveur' })
+  }
+}
+
+// ── RÉINITIALISATION MOT DE PASSE ────────────────────
+const resetPassword = async (req, res) => {
+  try {
+    const { token, password } = req.body
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({ 
+        message: 'Le mot de passe doit contenir au moins 10 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial' 
+      })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    await pool.query(
+      'UPDATE utilisateur SET password = ? WHERE utilisateur_id = ?',
+      [hashedPassword, decoded.id]
+    )
+
+    res.json({ message: 'Mot de passe réinitialisé avec succès' })
+
+  } catch (error) {
+    res.status(400).json({ message: 'Lien invalide ou expiré' })
   }
 }
 

@@ -1,5 +1,6 @@
 const Statistique = require('../models/Statistique')
 const pool = require('../config/database')
+const sendEmail = require('../utils/email')
 
 // ── STATS COMMANDES PAR MENU (MongoDB) ───────────────
 const getStatsCommandes = async (req, res) => {
@@ -13,9 +14,7 @@ const getStatsCommandes = async (req, res) => {
           chiffre_affaires: { $sum: '$prix_total' }
         }
       },
-      {
-        $sort: { nb_commandes: -1 }
-      }
+      { $sort: { nb_commandes: -1 } }
     ])
 
     res.json(stats)
@@ -31,12 +30,9 @@ const getChiffreAffaires = async (req, res) => {
   try {
     const { menu_id, date_debut, date_fin } = req.query
 
-    // Construction du filtre
     const filtre = {}
 
-    if (menu_id) {
-      filtre.menu_id = parseInt(menu_id)
-    }
+    if (menu_id) filtre.menu_id = parseInt(menu_id)
 
     if (date_debut || date_fin) {
       filtre.date_commande = {}
@@ -48,18 +44,13 @@ const getChiffreAffaires = async (req, res) => {
       { $match: filtre },
       {
         $group: {
-          _id: {
-            menu_id: '$menu_id',
-            menu_titre: '$menu_titre'
-          },
+          _id: { menu_id: '$menu_id', menu_titre: '$menu_titre' },
           nb_commandes: { $sum: 1 },
           chiffre_affaires: { $sum: '$prix_total' },
           total_personnes: { $sum: '$nb_personnes' }
         }
       },
-      {
-        $sort: { chiffre_affaires: -1 }
-      }
+      { $sort: { chiffre_affaires: -1 } }
     ])
 
     res.json(stats)
@@ -70,14 +61,12 @@ const getChiffreAffaires = async (req, res) => {
   }
 }
 
-// ── CRÉER COMPTE EMPLOYÉ (admin seulement) ───────────
+// ── CRÉER COMPTE EMPLOYÉ ──────────────────────────────
 const createEmploye = async (req, res) => {
   try {
     const { email, password } = req.body
     const bcrypt = require('bcryptjs')
-    const nodemailer = require('nodemailer')
 
-    // Vérifier que l'email n'existe pas
     const [existing] = await pool.query(
       'SELECT * FROM utilisateur WHERE email = ?',
       [email]
@@ -89,26 +78,14 @@ const createEmploye = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // Créer l'employé (role_id = 2)
     await pool.query(
       `INSERT INTO utilisateur (role_id, email, password, nom, prenom)
        VALUES (2, ?, ?, 'Employé', 'Nouveau')`,
       [email, hashedPassword]
     )
 
-    // Email de notification
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
-    })
-
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+      await sendEmail({
         to: email,
         subject: 'Votre compte employé - Vite & Gourmand',
         html: `

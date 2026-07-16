@@ -1,16 +1,6 @@
 const pool = require('../config/database')
 const Statistique = require('../models/Statistique')
-const nodemailer = require('nodemailer')
-
-// Configuration email
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  }
-})
+const sendEmail = require('../utils/email')
 
 // ── CALCUL PRIX LIVRAISON ─────────────────────────────
 const calculPrixLivraison = (ville) => {
@@ -18,9 +8,6 @@ const calculPrixLivraison = (ville) => {
   if (villeNormalisee === 'bordeaux') {
     return 5.00
   }
-  // Pour les autres villes on applique 5€ + 0.59€/km
-  // En production on utiliserait une API de géolocalisation
-  // Pour le développement on fixe une distance exemple de 20km
   return 5 + (20 * 0.59)
 }
 
@@ -38,7 +25,6 @@ const createCommande = async (req, res) => {
 
     const utilisateur_id = req.user.id
 
-    // Récupérer le menu
     const [menus] = await pool.query(
       'SELECT * FROM menu WHERE menu_id = ? AND actif = true',
       [menu_id]
@@ -50,30 +36,24 @@ const createCommande = async (req, res) => {
 
     const menu = menus[0]
 
-    // Vérifier le stock
     if (menu.stock <= 0) {
       return res.status(400).json({ message: 'Ce menu n\'est plus disponible' })
     }
 
-    // Vérifier le nombre minimum de personnes
     if (nb_personnes < menu.nb_personnes_min) {
       return res.status(400).json({ 
         message: `Ce menu nécessite un minimum de ${menu.nb_personnes_min} personnes` 
       })
     }
 
-    // Calcul du prix
     let prix_menu = menu.prix * nb_personnes
 
-    // Réduction 10% si 5 personnes de plus que le minimum
     if (nb_personnes >= menu.nb_personnes_min + 5) {
       prix_menu = prix_menu * 0.9
     }
 
-    // Calcul prix livraison
     const prix_livraison = calculPrixLivraison(ville_livraison)
 
-    // Créer la commande
     const [result] = await pool.query(
       `INSERT INTO commande 
       (utilisateur_id, menu_id, date_prestation, heure_livraison, 
@@ -85,13 +65,11 @@ const createCommande = async (req, res) => {
 
     const commande_id = result.insertId
 
-    // Décrémenter le stock
     await pool.query(
       'UPDATE menu SET stock = stock - 1 WHERE menu_id = ?',
       [menu_id]
     )
 
-    // Enregistrer dans MongoDB pour les statistiques
     try {
       await Statistique.create({
         menu_id: menu.menu_id,
@@ -104,15 +82,13 @@ const createCommande = async (req, res) => {
       console.error('Erreur MongoDB stats :', mongoError.message)
     }
 
-    // Email de confirmation
     const [users] = await pool.query(
       'SELECT * FROM utilisateur WHERE utilisateur_id = ?',
       [utilisateur_id]
     )
 
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+      await sendEmail({
         to: users[0].email,
         subject: 'Confirmation de votre commande - Vite & Gourmand',
         html: `
@@ -193,12 +169,10 @@ const getCommandeById = async (req, res) => {
       return res.status(404).json({ message: 'Commande non trouvée' })
     }
 
-    // Un utilisateur ne peut voir que ses propres commandes
     if (role === 'utilisateur' && commandes[0].utilisateur_id !== utilisateur_id) {
       return res.status(403).json({ message: 'Accès refusé' })
     }
 
-    // Récupérer l'historique des statuts
     const [historique] = await pool.query(
       `SELECT h.*, u.nom as employe_nom, u.prenom as employe_prenom
        FROM historique_statut h
@@ -216,7 +190,7 @@ const getCommandeById = async (req, res) => {
   }
 }
 
-// ── ANNULER UNE COMMANDE (utilisateur) ───────────────
+// ── ANNULER UNE COMMANDE ──────────────────────────────
 const annulerCommande = async (req, res) => {
   try {
     const { id } = req.params
@@ -233,19 +207,14 @@ const annulerCommande = async (req, res) => {
 
     const commande = commandes[0]
 
-    // Vérifier que c'est bien sa commande
     if (commande.utilisateur_id !== utilisateur_id) {
       return res.status(403).json({ message: 'Accès refusé' })
     }
 
-    // On ne peut annuler que si statut "en attente"
     if (commande.statut !== 'en attente') {
-      return res.status(400).json({ 
-        message: 'Cette commande ne peut plus être annulée' 
-      })
+      return res.status(400).json({ message: 'Cette commande ne peut plus être annulée' })
     }
 
-    // Annuler et remettre le stock
     await pool.query(
       'UPDATE commande SET statut = ? WHERE commande_id = ?',
       ['annulée', id]
@@ -264,7 +233,7 @@ const annulerCommande = async (req, res) => {
   }
 }
 
-// ── MODIFIER UNE COMMANDE (utilisateur) ──────────────
+// ── MODIFIER UNE COMMANDE ─────────────────────────────
 const modifierCommande = async (req, res) => {
   try {
     const { id } = req.params
@@ -282,16 +251,12 @@ const modifierCommande = async (req, res) => {
 
     const commande = commandes[0]
 
-    // Vérifier que c'est bien sa commande
     if (commande.utilisateur_id !== utilisateur_id) {
       return res.status(403).json({ message: 'Accès refusé' })
     }
 
-    // On ne peut modifier que si statut "en attente"
     if (commande.statut !== 'en attente') {
-      return res.status(400).json({ 
-        message: 'Cette commande ne peut plus être modifiée' 
-      })
+      return res.status(400).json({ message: 'Cette commande ne peut plus être modifiée' })
     }
 
     await pool.query(
@@ -310,7 +275,7 @@ const modifierCommande = async (req, res) => {
   }
 }
 
-// ── GET TOUTES LES COMMANDES (employé/admin) ─────────
+// ── GET TOUTES LES COMMANDES (employé/admin) ──────────
 const getAllCommandes = async (req, res) => {
   try {
     const { statut, utilisateur_id } = req.query
@@ -347,7 +312,7 @@ const getAllCommandes = async (req, res) => {
   }
 }
 
-// ── METTRE À JOUR STATUT (employé/admin) ─────────────
+// ── METTRE À JOUR STATUT ──────────────────────────────
 const updateStatut = async (req, res) => {
   try {
     const { id } = req.params
@@ -355,8 +320,8 @@ const updateStatut = async (req, res) => {
     const employe_id = req.user.id
 
     const statutsValides = [
-      'en attente', 'accepté', 'en préparation', 
-      'en cours de livraison', 'livré', 
+      'en attente', 'accepté', 'en préparation',
+      'en cours de livraison', 'livré',
       'en attente du retour de matériel', 'terminée', 'annulée'
     ]
 
@@ -364,20 +329,17 @@ const updateStatut = async (req, res) => {
       return res.status(400).json({ message: 'Statut invalide' })
     }
 
-    // Mettre à jour le statut
     await pool.query(
       'UPDATE commande SET statut = ? WHERE commande_id = ?',
       [statut, id]
     )
 
-    // Enregistrer dans l'historique
     await pool.query(
       `INSERT INTO historique_statut (commande_id, employe_id, statut, motif)
        VALUES (?, ?, ?, ?)`,
       [id, employe_id, statut, motif || null]
     )
 
-    // Email si statut "terminée"
     if (statut === 'terminée') {
       const [commandes] = await pool.query(
         `SELECT c.*, u.email, u.prenom 
@@ -386,10 +348,8 @@ const updateStatut = async (req, res) => {
          WHERE c.commande_id = ?`,
         [id]
       )
-
       try {
-        await transporter.sendMail({
-          from: process.env.EMAIL_USER,
+        await sendEmail({
           to: commandes[0].email,
           subject: 'Votre commande est terminée - Donnez votre avis !',
           html: `
@@ -405,7 +365,6 @@ const updateStatut = async (req, res) => {
       }
     }
 
-    // Email si statut "en attente du retour de matériel"
     if (statut === 'en attente du retour de matériel') {
       const [commandes] = await pool.query(
         `SELECT c.*, u.email, u.prenom 
@@ -414,10 +373,8 @@ const updateStatut = async (req, res) => {
          WHERE c.commande_id = ?`,
         [id]
       )
-
       try {
-        await transporter.sendMail({
-          from: process.env.EMAIL_USER,
+        await sendEmail({
           to: commandes[0].email,
           subject: 'Retour de matériel requis - Vite & Gourmand',
           html: `
@@ -425,9 +382,7 @@ const updateStatut = async (req, res) => {
             <p>Bonjour ${commandes[0].prenom},</p>
             <p>Du matériel vous a été prêté lors de votre prestation.</p>
             <p>Vous disposez de <strong>10 jours ouvrés</strong> pour le restituer.</p>
-            <p>Sans restitution dans ce délai, des frais de <strong>600€</strong> 
-               vous seront facturés (conformément aux CGV).</p>
-            <p>Pour restituer le matériel, contactez-nous.</p>
+            <p>Sans restitution dans ce délai, des frais de <strong>600€</strong> vous seront facturés.</p>
             <p><strong>L'équipe Vite & Gourmand</strong></p>
           `
         })

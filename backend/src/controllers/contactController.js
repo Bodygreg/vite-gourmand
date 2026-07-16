@@ -1,13 +1,4 @@
-const nodemailer = require('nodemailer')
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  }
-})
+const sendEmail = require('../utils/email')
 
 // ── ENVOYER MESSAGE CONTACT ───────────────────────────
 const sendContact = async (req, res) => {
@@ -20,15 +11,9 @@ const sendContact = async (req, res) => {
       })
     }
 
-    // Logs temporaires de débogage
-    console.log('EMAIL_USER:', process.env.EMAIL_USER)
-    console.log('email reçu:', email)
-
     try {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+      await sendEmail({
         to: process.env.EMAIL_TO,
-        replyTo: email,          
         subject: `Contact - ${titre}`,
         html: `
           <h2>${titre}</h2>
