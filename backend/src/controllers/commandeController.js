@@ -101,8 +101,14 @@ const createCommande = async (req, res) => {
             <li><strong>Date :</strong> ${date_prestation}</li>
             <li><strong>Heure :</strong> ${heure_livraison}</li>
             <li><strong>Adresse :</strong> ${adresse_livraison}, ${ville_livraison}</li>
-            <li><strong>Prix menu :</strong> ${prix_menu.toFixed(2)}€</li>
-            <li><strong>Prix livraison :</strong> ${prix_livraison.toFixed(2)}€</li>
+          </ul>
+          <h3>Détail du prix :</h3>
+          <ul>
+            <li><strong>Prix unitaire :</strong> ${menu.prix}€ / personne</li>
+            <li><strong>Nombre de personnes :</strong> ${nb_personnes}</li>
+            ${nb_personnes >= menu.nb_personnes_min + 5 ? `<li><strong>Réduction (10%) :</strong> -${(menu.prix * nb_personnes * 0.1).toFixed(2)}€</li>` : ''}
+            <li><strong>Prix des menus :</strong> ${prix_menu.toFixed(2)}€</li>
+            <li><strong>Frais de livraison :</strong> ${prix_livraison.toFixed(2)}€</li>
             <li><strong>Total :</strong> ${(prix_menu + prix_livraison).toFixed(2)}€</li>
           </ul>
           <p>À bientôt !</p>
