@@ -29,11 +29,11 @@ INSERT INTO regime (libelle) VALUES
 ('Vegan');
 
 -- Insertion des menus
-INSERT INTO menu (theme_id, regime_id, titre, description, nb_personnes_min, prix, conditions, stock) VALUES
-(1, 1, 'Menu de Noël', 'Un menu festif pour célébrer Noël en famille', 4, 120.00, 'Commander 48h à l\'avance minimum', 10),
-(2, 2, 'Menu de Pâques Végétarien', 'Un menu de saison sans viande pour Pâques', 6, 95.00, 'Commander 72h à l\'avance minimum', 8),
-(3, 1, 'Menu Classique', 'Notre menu incontournable pour tous vos événements', 2, 45.00, 'Commander 24h à l\'avance minimum', 15),
-(4, 3, 'Menu Événement Vegan', 'Un menu 100% vegan pour vos événements', 8, 150.00, 'Commander 1 semaine à l\'avance minimum', 5);
+INSERT INTO menu (theme_id, regime_id, titre, description, nb_personnes_min, prix, conditions, stock, delai_commande) VALUES
+(1, 1, 'Menu de Noël', 'Un menu festif pour célébrer Noël en famille', 4, 120.00, 'Commander 48h à l\'avance minimum', 10, 48),
+(2, 2, 'Menu de Pâques Végétarien', 'Un menu de saison sans viande pour Pâques', 6, 95.00, 'Commander 72h à l\'avance minimum', 8, 72),
+(3, 1, 'Menu Classique', 'Notre menu incontournable pour tous vos événements', 2, 45.00, 'Commander 24h à l\'avance minimum', 15, 24),
+(4, 3, 'Menu Événement Vegan', 'Un menu 100% vegan pour vos événements', 8, 150.00, 'Commander 1 semaine à l\'avance minimum', 5, 168);
 
 -- Insertion des plats
 INSERT INTO plat (nom, type, description) VALUES

@@ -16,9 +16,9 @@ const sendContact = async (req, res) => {
         to: process.env.EMAIL_TO,
         subject: `Contact - ${titre}`,
         html: `
-          <h2>${titre}</h2>
           <p><strong>De :</strong> ${email}</p>
-          <p>${description}</p>
+          <h4>Objet : ${titre}</h4>        
+          <p>Message : ${description}</p>
         `
       })
     } catch (emailError) {

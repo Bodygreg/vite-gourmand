@@ -59,10 +59,11 @@ const Commande = () => {
     nb_personnes: 1
   })
 
-  // Date minimum = aujourd'hui + 48h
+  // Date minimum = aujourd'hui + délai du menu (ou 48h par défaut)
   const getDateMin = () => {
+    const delai = menuSelectionne?.delai_commande || 48
     const date = new Date()
-    date.setHours(date.getHours() + 48)
+    date.setHours(date.getHours() + delai)
     return date.toISOString().split('T')[0]
   }
 

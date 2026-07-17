@@ -102,7 +102,7 @@ const createCommande = async (req, res) => {
             <li><strong>Heure :</strong> ${heure_livraison}</li>
             <li><strong>Adresse :</strong> ${adresse_livraison}, ${ville_livraison}</li>
           </ul>
-          <h3>Détail du prix :</h3>
+          <h4>Détail du prix :</h4>
           <ul>
             <li><strong>Prix unitaire :</strong> ${menu.prix}€ / personne</li>
             <li><strong>Nombre de personnes :</strong> ${nb_personnes}</li>

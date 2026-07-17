@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { Mail, User, FileText } from 'lucide-react'
 import api from '../utils/axios'
 import './Contact.css'
+import { useAuth } from '../context/AuthContext'
 
 const Contact = () => {
+  const { user } = useAuth()
   const [formData, setFormData] = useState({
     titre: '',
     description: '',
-    email: ''
+    email: user?.email || ''
   })
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')

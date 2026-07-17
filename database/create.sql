@@ -51,6 +51,7 @@ CREATE TABLE menu (
     stock INT DEFAULT 0,
     actif BOOLEAN DEFAULT TRUE,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    delai_commande INT DEFAULT 48,
     FOREIGN KEY (theme_id) REFERENCES theme(theme_id),
     FOREIGN KEY (regime_id) REFERENCES regime(regime_id)
 );
