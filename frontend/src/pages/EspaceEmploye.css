@@ -218,6 +218,26 @@
   font-size: 0.85rem;
 }
 
+/* ── GESTION PLATS ─────────────────────────────── */
+.allergenes-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--texte-sombre);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.checkbox-label input {
+  cursor: pointer;
+}
+
 /* ── AVIS MODÉRATION ─────────────────────────────── */
 .avis-moderation {
   display: flex;

@@ -21,6 +21,7 @@ const horaireRoutes = require('./routes/horaireRoutes')
 const contactRoutes = require('./routes/contactRoutes')
 const themeRoutes = require('./routes/themeRoutes')
 const regimeRoutes = require('./routes/regimeRoutes')
+const platRoutes = require('./routes/platRoutes')
 
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -49,10 +50,20 @@ app.use('/api/horaires', horaireRoutes)
 app.use('/api/contact', contactRoutes)
 app.use('/api/themes', themeRoutes)
 app.use('/api/regimes', regimeRoutes)
+app.use('/api/plats', platRoutes)
 
 // Route de test
 app.get('/', (req, res) => {
   res.json({ message: 'API Vite & Gourmand fonctionne !' })
+})
+
+app.get('/api/allergenes', async (req, res) => {
+  try {
+    const [allergenes] = await pool.query('SELECT * FROM allergene')
+    res.json(allergenes)
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur' })
+  }
 })
 
 // Démarrage du serveur

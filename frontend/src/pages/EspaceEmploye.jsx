@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search, Filter, UtensilsCrossed } from 'lucide-react'
+import { Search, Filter, UtensilsCrossed} from 'lucide-react'
 import api from '../utils/axios'
 import './EspaceEmploye.css'
 import {Clock, Calendar, MapPin, Users, Banknote} from "lucide-react"
@@ -26,10 +26,17 @@ const EspaceEmploye = () => {
     prix: '',
     conditions: '',
     stock: '',
-    delai_commande: 48
+    delai_commande: 48,
+    plats: []
   })
 const [menuEdite, setMenuEdite] = useState(null)
 const [showMenuForm, setShowMenuForm] = useState(false)
+const [plats, setPlats] = useState([])
+const [allergenes, setAllergenes] = useState([])
+const [platForm, setPlatForm] = useState({ nom: '', type: 'entree', description: '', allergenes: [] })
+const [platEdite, setPlatEdite] = useState(null)
+const [showPlatForm, setShowPlatForm] = useState(false)
+const [horaires, setHoraires] = useState([])
 
   useEffect(() => {
     chargerDonnees()
@@ -37,21 +44,27 @@ const [showMenuForm, setShowMenuForm] = useState(false)
 
   const chargerDonnees = async () => {
     try {
-      const [commandesRes, avisRes, menusRes, themesRes, regimesRes] = await Promise.all([
+      const [commandesRes, avisRes, menusRes, themesRes, regimesRes, platsRes, allergenesRes, horairesRes] = await Promise.all([
         api.get('/commandes'),
         api.get('/avis/tous'),
         api.get('/menus'),
         api.get('/themes'),
-        api.get('/regimes')
+        api.get('/regimes'),
+        api.get('/plats'),
+        api.get('/allergenes'),
+        api.get('/horaires')
       ])
       setCommandes(commandesRes.data)
       setAvis(avisRes.data)
       setMenus(menusRes.data)
       setThemes(themesRes.data)
       setRegimes(regimesRes.data)
+      setPlats(platsRes.data)
+      setAllergenes(allergenesRes.data)
+      setHoraires(horairesRes.data)
       setLoading(false)
     } catch (err) {
-      console.error(err)
+      console.error('Erreur chargerDonnees:', err)
       setLoading(false)
     }
   }
@@ -91,16 +104,27 @@ const [showMenuForm, setShowMenuForm] = useState(false)
   const handleMenuSubmit = async (e) => {
     e.preventDefault()
     try {
+      let menu_id
       if (menuEdite) {
         await api.put(`/menus/${menuEdite.menu_id}`, menuForm)
+        menu_id = menuEdite.menu_id
+        // Supprimer tous les plats existants et réinsérer
+        await Promise.all((menuForm.plats || []).map(plat_id =>
+          api.post('/plats/menu', { menu_id, plat_id })
+        ))
       } else {
-        await api.post('/menus', menuForm)
+        const res = await api.post('/menus', menuForm)
+        menu_id = res.data.menu_id
+        await Promise.all((menuForm.plats || []).map(plat_id =>
+          api.post('/plats/menu', { menu_id, plat_id })
+        ))
       }
       setShowMenuForm(false)
       setMenuEdite(null)
       setMenuForm({
         titre: '', description: '', theme_id: '', regime_id: '',
-        nb_personnes_min: '', prix: '', conditions: '', stock: '', delai_commande: 48
+        nb_personnes_min: '', prix: '', conditions: '', stock: '', 
+        delai_commande: 48, plats: []
       })
       chargerDonnees()
     } catch (err) {
@@ -128,6 +152,74 @@ const [showMenuForm, setShowMenuForm] = useState(false)
     if (!window.confirm('Confirmer la suppression ?')) return
     try {
       await api.delete(`/menus/${id}`)
+      chargerDonnees()
+    } catch (err) {
+      alert(err.response?.data?.message || 'Erreur')
+    }
+  }
+
+  const handlePlatSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      if (platEdite) {
+        await api.put(`/plats/${platEdite.plat_id}`, platForm)
+      } else {
+        await api.post('/plats', platForm)
+      }
+      setShowPlatForm(false)
+      setPlatEdite(null)
+      setPlatForm({ nom: '', type: 'entree', description: '', allergenes: [] })
+      chargerDonnees()
+    } catch (err) {
+      alert(err.response?.data?.message || 'Erreur')
+    }
+  }
+
+  const handlePlatEdit = (plat) => {
+    setPlatEdite(plat)
+    setPlatForm({
+      nom: plat.nom,
+      type: plat.type,
+      description: plat.description || '',
+      allergenes: plat.allergenes ? plat.allergenes.split(',').map(a => {
+        const found = allergenes.find(al => al.libelle === a.trim())
+        return found ? found.allergene_id : null
+      }).filter(Boolean) : []
+    })
+    setShowPlatForm(true)
+  }
+
+  const handlePlatDelete = async (id) => {
+    if (!window.confirm('Confirmer la suppression ?')) return
+    try {
+      await api.delete(`/plats/${id}`)
+      chargerDonnees()
+    } catch (err) {
+      alert(err.response?.data?.message || 'Erreur')
+    }
+  }
+
+  const handleAddPlatToMenu = async (menu_id, plat_id) => {
+    try {
+      await api.post('/plats/menu', { menu_id, plat_id })
+      chargerDonnees()
+    } catch (err) {
+      alert(err.response?.data?.message || 'Erreur')
+    }
+  }
+
+  const handleRemovePlatFromMenu = async (menu_id, plat_id) => {
+    try {
+      await api.delete(`/plats/menu/${menu_id}/${plat_id}`)
+      chargerDonnees()
+    } catch (err) {
+      alert(err.response?.data?.message || 'Erreur')
+    }
+  }
+
+  const handleHoraireUpdate = async (id, heure_ouverture, heure_fermeture) => {
+    try {
+      await api.put(`/horaires/${id}`, { heure_ouverture, heure_fermeture })
       chargerDonnees()
     } catch (err) {
       alert(err.response?.data?.message || 'Erreur')
@@ -174,6 +266,21 @@ const [showMenuForm, setShowMenuForm] = useState(false)
           >
             <UtensilsCrossed size={18} />
             Menus
+          </button>
+          <button
+            className={`onglet ${onglet === 'plats' ? 'active' : ''}`}
+            onClick={() => setOnglet('plats')}
+          >
+            <UtensilsCrossed size={18} />
+            Plats
+          </button>
+
+          <button
+            className={`onglet ${onglet === 'horaires' ? 'active' : ''}`}
+            onClick={() => setOnglet('horaires')}
+          >
+            <Clock size={18} />
+            Horaires
           </button>
         </div>
 
@@ -484,6 +591,28 @@ const [showMenuForm, setShowMenuForm] = useState(false)
                         rows={2}
                       />
                     </div>
+                    <div className="form-group">
+                      <label>Plats du menu</label>
+                      <div className="allergenes-checkboxes">
+                        {plats.map(p => (
+                          <label key={p.plat_id} className="checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={menuForm.plats?.includes(p.plat_id) || false}
+                              onChange={e => {
+                                const current = menuForm.plats || []
+                                if (e.target.checked) {
+                                  setMenuForm({...menuForm, plats: [...current, p.plat_id]})
+                                } else {
+                                  setMenuForm({...menuForm, plats: current.filter(id => id !== p.plat_id)})
+                                }
+                              }}
+                            />
+                            {p.nom} ({p.type})
+                          </label>
+                        ))}
+                      </div>
+                    </div>
                     <div className="modal-actions">
                       <button type="submit" className="btn-primaire">
                         {menuEdite ? 'Modifier' : 'Créer'}
@@ -500,6 +629,117 @@ const [showMenuForm, setShowMenuForm] = useState(false)
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {onglet === 'plats' && (
+          <div className="gestion-menus">
+            <div className="gestion-header">
+              <h2>Gestion des plats</h2>
+              <button className="btn-primaire" onClick={() => { setPlatEdite(null); setShowPlatForm(true) }}>
+                + Nouveau plat
+              </button>
+            </div>
+
+            <div className="menus-gestion-list">
+              {plats.map(p => (
+                <div key={p.plat_id} className="menu-gestion-item">
+                  <div className="menu-gestion-info">
+                    <h3>{p.nom}</h3>
+                    <p>{p.type} {p.allergenes ? `— Allergènes : ${p.allergenes}` : ''}</p>
+                  </div>
+                  <div className="menu-gestion-actions">
+                    <button className="btn-outline" onClick={() => handlePlatEdit(p)}>Modifier</button>
+                    <button className="btn-danger" onClick={() => handlePlatDelete(p.plat_id)}>Supprimer</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {showPlatForm && (
+              <div className="modal-overlay">
+                <div className="modal">
+                  <h2>{platEdite ? 'Modifier le plat' : 'Nouveau plat'}</h2>
+                  <form onSubmit={handlePlatSubmit}>
+                    <div className="form-group">
+                      <label>Nom *</label>
+                      <input type="text" value={platForm.nom} onChange={e => setPlatForm({...platForm, nom: e.target.value})} required />
+                    </div>
+                    <div className="form-group">
+                      <label>Type *</label>
+                      <select value={platForm.type} onChange={e => setPlatForm({...platForm, type: e.target.value})}>
+                        <option value="entree">Entrée</option>
+                        <option value="plat">Plat</option>
+                        <option value="dessert">Dessert</option>
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Description</label>
+                      <textarea value={platForm.description} onChange={e => setPlatForm({...platForm, description: e.target.value})} rows={2} />
+                    </div>
+                    <div className="form-group">
+                      <label>Allergènes</label>
+                      <div className="allergenes-checkboxes">
+                        {allergenes.map(a => (
+                          <label key={a.allergene_id} className="checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={platForm.allergenes.includes(a.allergene_id)}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setPlatForm({...platForm, allergenes: [...platForm.allergenes, a.allergene_id]})
+                                } else {
+                                  setPlatForm({...platForm, allergenes: platForm.allergenes.filter(id => id !== a.allergene_id)})
+                                }
+                              }}
+                            />
+                            {a.libelle}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="modal-actions">
+                      <button type="submit" className="btn-primaire">{platEdite ? 'Modifier' : 'Créer'}</button>
+                      <button type="button" className="btn-outline" onClick={() => setShowPlatForm(false)}>Annuler</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {onglet === 'horaires' && (
+          <div className="gestion-menus">
+            <h2>Gestion des horaires</h2>
+            <div className="menus-gestion-list">
+              {horaires.map(h => (
+                <div key={h.horaire_id} className="menu-gestion-item">
+                  <div className="menu-gestion-info">
+                    <h3>{h.jour}</h3>
+                  </div>
+                  <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                    <input
+                      type="time"
+                      defaultValue={h.heure_ouverture}
+                      onChange={e => h.heure_ouverture = e.target.value}
+                    />
+                    <span style={{ color: 'var(--texte-sombre)' }}>→</span>
+                    <input
+                      type="time"
+                      defaultValue={h.heure_fermeture}
+                      onChange={e => h.heure_fermeture = e.target.value}
+                    />
+                    <button
+                      className="btn-primaire"
+                      onClick={() => handleHoraireUpdate(h.horaire_id, h.heure_ouverture, h.heure_fermeture)}
+                    >
+                      Sauvegarder
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
