@@ -87,6 +87,15 @@ const createCommande = async (req, res) => {
       [utilisateur_id]
     )
 
+    const formatDate = (date) => {
+      const d = new Date(date)
+      return d.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit', 
+        year: 'numeric'
+      })
+    }
+
     try {
       await sendEmail({
         to: users[0].email,
@@ -98,7 +107,7 @@ const createCommande = async (req, res) => {
           <ul>
             <li><strong>Menu :</strong> ${menu.titre}</li>
             <li><strong>Nombre de personnes :</strong> ${nb_personnes}</li>
-            <li><strong>Date :</strong> ${date_prestation}</li>
+            <li><strong>Date :</strong> ${formatDate(date_prestation)}</li>
             <li><strong>Heure :</strong> ${heure_livraison}</li>
             <li><strong>Adresse :</strong> ${adresse_livraison}, ${ville_livraison}</li>
           </ul>
