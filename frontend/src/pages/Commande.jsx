@@ -19,6 +19,16 @@ const Commande = () => {
 
   const [horaires, setHoraires] = useState([])
 
+  const formatDate = (date) => {
+    if (!date) return ''
+    const d = new Date(date)
+    return d.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    })
+  }
+
   useEffect(() => {
     Promise.all([
       api.get('/menus'),
@@ -420,7 +430,7 @@ const calculPrix = () => {
                 <p>{user?.nom} {user?.prenom}</p>
                 <p>{formData.adresse_livraison}</p>
                 <p>{formData.ville_livraison}</p>
-                <p><Calendar size={16} color="var(--accent-ambre)" /> Le {formData.date_prestation} à {formData.heure_livraison}</p>
+                <p><Calendar size={16} color="var(--accent-ambre)" /> Le {formatDate(formData.date_prestation)} à {formData.heure_livraison}</p>
                 <p><Phone size={16} color="var(--accent-ambre)" /> {user?.telephone}</p>
               </div>
             </div>         
