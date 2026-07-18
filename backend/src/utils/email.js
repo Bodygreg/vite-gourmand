@@ -1,27 +1,20 @@
-const sendEmail = async ({ to, subject, html }) => {
-  const response = await fetch(
-    `https://sandbox.api.mailtrap.io/api/send/${process.env.MAILTRAP_INBOX_ID}`,
-    {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.MAILTRAP_TOKEN}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: { email: 'noreply@vitegourmand.fr', name: 'Vite & Gourmand' },
-        to: [{ email: to }],
-        subject,
-        html
-      })
-    }
-  )
+const { Resend } = require('resend')
 
-  if (!response.ok) {
-    const error = await response.text()
-    throw new Error(`Mailtrap API error: ${error}`)
+const resend = new Resend(process.env.RESEND_API_KEY)
+
+const sendEmail = async ({ to, subject, html }) => {
+  const { data, error } = await resend.emails.send({
+    from: 'Vite & Gourmand <onboarding@resend.dev>',
+    to,
+    subject,
+    html
+  })
+
+  if (error) {
+    throw new Error(`Resend error: ${error.message}`)
   }
 
-  return response.json()
+  return data
 }
 
 module.exports = sendEmail
