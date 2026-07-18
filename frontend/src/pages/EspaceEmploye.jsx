@@ -27,16 +27,18 @@ const EspaceEmploye = () => {
     conditions: '',
     stock: '',
     delai_commande: 48,
-    plats: []
+    plats: [],
+    image_url: ''
   })
-const [menuEdite, setMenuEdite] = useState(null)
-const [showMenuForm, setShowMenuForm] = useState(false)
-const [plats, setPlats] = useState([])
-const [allergenes, setAllergenes] = useState([])
-const [platForm, setPlatForm] = useState({ nom: '', type: 'entree', description: '', allergenes: [] })
-const [platEdite, setPlatEdite] = useState(null)
-const [showPlatForm, setShowPlatForm] = useState(false)
-const [horaires, setHoraires] = useState([])
+  const [menuEdite, setMenuEdite] = useState(null)
+  const [showMenuForm, setShowMenuForm] = useState(false)
+  const [plats, setPlats] = useState([])
+  const [allergenes, setAllergenes] = useState([])
+  const [platForm, setPlatForm] = useState({ nom: '', type: 'entree', description: '', allergenes: [] })
+  const [platEdite, setPlatEdite] = useState(null)
+  const [showPlatForm, setShowPlatForm] = useState(false)
+  const [horaires, setHoraires] = useState([])
+  const [uploadingImage, setUploadingImage] = useState(false)
 
   useEffect(() => {
     chargerDonnees()
@@ -226,6 +228,26 @@ const [horaires, setHoraires] = useState([])
     }
   }
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    
+    setUploadingImage(true)
+    const formData = new FormData()
+    formData.append('image', file)
+    
+    try {
+      const res = await api.post('/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      })
+      setMenuForm(prev => ({...prev, image_url: res.data.url}))
+    } catch (err) {
+      alert('Erreur upload image')
+    } finally {
+      setUploadingImage(false)
+    }
+  }
+
   const getStatutColor = (statut) => {
     const colors = {
       'en attente': 'var(--texte-secondaire)',
@@ -385,6 +407,24 @@ const [horaires, setHoraires] = useState([])
                       />
                     </div>
                   )}
+
+                  <div className="form-group">
+                    <label>Image du menu</label>
+                    {menuForm.image_url && (
+                      <img 
+                        src={menuForm.image_url} 
+                        alt="aperçu" 
+                        style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '0.5rem' }}
+                      />
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={uploadingImage}
+                    />
+                    {uploadingImage && <p style={{ color: 'var(--accent-ambre)' }}>Upload en cours...</p>}
+                  </div>
 
                   <div className="modal-actions">
                     <button
