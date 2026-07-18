@@ -125,6 +125,8 @@ const updateMenu = async (req, res) => {
       delai_commande, image_url
     } = req.body
 
+    console.log('updateMenu appelé, image_url:', image_url)
+
     await pool.query(
       `UPDATE menu SET 
       theme_id = ?, regime_id = ?, titre = ?, description = ?,

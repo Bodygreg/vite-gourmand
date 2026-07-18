@@ -163,7 +163,7 @@ const Menus = () => {
                 <div key={menu.menu_id} className="menu-card">
                   <div className="menu-card-image">
                     <img
-                      src={`https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400`}
+                      src={menu.image_url || 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400'}
                       alt={menu.titre}
                     />
                   </div>
