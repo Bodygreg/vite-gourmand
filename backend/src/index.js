@@ -22,9 +22,12 @@ const contactRoutes = require('./routes/contactRoutes')
 const themeRoutes = require('./routes/themeRoutes')
 const regimeRoutes = require('./routes/regimeRoutes')
 const platRoutes = require('./routes/platRoutes')
+const { authMiddleware, checkRole } = require('./middlewares/authMiddleware')
 
 const app = express()
 const PORT = process.env.PORT || 3000
+
+const { upload, uploadToCloudinary } = require('./config/cloudinary')
 
 // Middlewares
 app.use(cors({
@@ -51,6 +54,25 @@ app.use('/api/contact', contactRoutes)
 app.use('/api/themes', themeRoutes)
 app.use('/api/regimes', regimeRoutes)
 app.use('/api/plats', platRoutes)
+
+// Route upload image
+app.post('/api/upload',
+  authMiddleware,
+  checkRole('employe', 'administrateur'),
+  upload.single('image'),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'Aucun fichier envoyé' })
+      }
+      const result = await uploadToCloudinary(req.file.buffer)
+      res.json({ url: result.secure_url })
+    } catch (error) {
+      console.error('Erreur upload:', error)
+      res.status(500).json({ message: 'Erreur upload' })
+    }
+  }
+)
 
 // Route de test
 app.get('/', (req, res) => {
