@@ -105,17 +105,19 @@ const EspaceEmploye = () => {
 
   const handleMenuSubmit = async (e) => {
     e.preventDefault()
+    console.log('handleMenuSubmit appelé', menuForm) 
     try {
       let menu_id
       if (menuEdite) {
-        await api.put(`/menus/${menuEdite.menu_id}`, menuForm)
+        const res = await api.put(`/menus/${menuEdite.menu_id}`, menuForm)
+        console.log('Réponse PUT:', res.data)  // ← ajoute
         menu_id = menuEdite.menu_id
-        // Supprimer tous les plats existants et réinsérer
         await Promise.all((menuForm.plats || []).map(plat_id =>
           api.post('/plats/menu', { menu_id, plat_id })
         ))
       } else {
         const res = await api.post('/menus', menuForm)
+        console.log('Réponse POST:', res.data)  // ← ajoute
         menu_id = res.data.menu_id
         await Promise.all((menuForm.plats || []).map(plat_id =>
           api.post('/plats/menu', { menu_id, plat_id })
@@ -126,10 +128,12 @@ const EspaceEmploye = () => {
       setMenuForm({
         titre: '', description: '', theme_id: '', regime_id: '',
         nb_personnes_min: '', prix: '', conditions: '', stock: '', 
-        delai_commande: 48, plats: []
+        delai_commande: 48, plats: [],
+        image_url: ''  // ← ajoute
       })
       chargerDonnees()
     } catch (err) {
+      console.error('Erreur handleMenuSubmit:', err)  // ← ajoute
       alert(err.response?.data?.message || 'Erreur')
     }
   }
@@ -145,7 +149,8 @@ const EspaceEmploye = () => {
       prix: menu.prix,
       conditions: menu.conditions,
       stock: menu.stock,
-      delai_commande: menu.delai_commande || 48
+      delai_commande: menu.delai_commande || 48,
+      image_url: menu.image_url || ''
     })
     setShowMenuForm(true)
   }
@@ -229,6 +234,7 @@ const EspaceEmploye = () => {
   }
 
   const handleImageUpload = async (e) => {
+    console.log('Upload déclenché', e.target.files[0])
     const file = e.target.files[0]
     if (!file) return
     
@@ -240,8 +246,10 @@ const EspaceEmploye = () => {
       const res = await api.post('/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
+      console.log('Réponse upload:', res.data)
       setMenuForm(prev => ({...prev, image_url: res.data.url}))
     } catch (err) {
+      console.error('Erreur upload:', err) 
       alert('Erreur upload image')
     } finally {
       setUploadingImage(false)
@@ -406,26 +414,7 @@ const EspaceEmploye = () => {
                         rows={3}
                       />
                     </div>
-                  )}
-
-                  <div className="form-group">
-                    <label>Image du menu</label>
-                    {menuForm.image_url && (
-                      <img 
-                        src={menuForm.image_url} 
-                        alt="aperçu" 
-                        style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '0.5rem' }}
-                      />
-                    )}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      disabled={uploadingImage}
-                    />
-                    {uploadingImage && <p style={{ color: 'var(--accent-ambre)' }}>Upload en cours...</p>}
-                  </div>
-
+                  )}           
                   <div className="modal-actions">
                     <button
                       className="btn-primaire"
@@ -652,6 +641,23 @@ const EspaceEmploye = () => {
                           </label>
                         ))}
                       </div>
+                    </div>
+                    <div className="form-group">
+                      <label>Image du menu</label>
+                      {menuForm.image_url && (
+                        <img 
+                          src={menuForm.image_url} 
+                          alt="aperçu" 
+                          style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '0.5rem' }}
+                        />
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        disabled={uploadingImage}
+                      />
+                      {uploadingImage && <p style={{ color: 'var(--accent-ambre)' }}>Upload en cours...</p>}
                     </div>
                     <div className="modal-actions">
                       <button type="submit" className="btn-primaire">

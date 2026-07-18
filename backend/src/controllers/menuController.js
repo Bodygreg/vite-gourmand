@@ -121,15 +121,18 @@ const updateMenu = async (req, res) => {
     const { id } = req.params
     const { 
       theme_id, regime_id, titre, description, 
-      nb_personnes_min, prix, conditions, stock 
+      nb_personnes_min, prix, conditions, stock,
+      delai_commande, image_url
     } = req.body
 
     await pool.query(
       `UPDATE menu SET 
       theme_id = ?, regime_id = ?, titre = ?, description = ?,
-      nb_personnes_min = ?, prix = ?, conditions = ?, stock = ?
+      nb_personnes_min = ?, prix = ?, conditions = ?, stock = ?,
+      delai_commande = ?, image_url = ?
       WHERE menu_id = ?`,
-      [theme_id, regime_id, titre, description, nb_personnes_min, prix, conditions, stock, id]
+      [theme_id, regime_id, titre, description, nb_personnes_min, 
+       prix, conditions, stock, delai_commande, image_url || null, id]
     )
 
     res.json({ message: 'Menu modifié avec succès' })
