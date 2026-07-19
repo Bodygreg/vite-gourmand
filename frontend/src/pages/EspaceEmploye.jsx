@@ -39,6 +39,7 @@ const EspaceEmploye = () => {
   const [showPlatForm, setShowPlatForm] = useState(false)
   const [horaires, setHoraires] = useState([])
   const [uploadingImage, setUploadingImage] = useState(false)
+  const [ongletMenuOpen, setOngletMenuOpen] = useState(false)
 
   useEffect(() => {
     chargerDonnees()
@@ -276,7 +277,30 @@ const EspaceEmploye = () => {
       <div className="container">
         <h1>Espace Employé</h1>
 
-        {/* Onglets */}
+        {/* Version mobile — burger */}
+        <div className="onglets-mobile">
+          <button 
+            className="onglets-burger"
+            onClick={() => setOngletMenuOpen(!ongletMenuOpen)}
+          >
+            {onglet.charAt(0).toUpperCase() + onglet.slice(1)} {ongletMenuOpen ? '▲' : '▼'}
+          </button>
+          {ongletMenuOpen && (
+            <div className="onglets-dropdown">
+              {['commandes', 'avis', 'menus', 'plats', 'horaires'].map(o => (
+                <button
+                  key={o}
+                  className={`onglet ${onglet === o ? 'active' : ''}`}
+                  onClick={() => { setOnglet(o); setOngletMenuOpen(false) }}
+                >
+                  {o.charAt(0).toUpperCase() + o.slice(1)}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Onglets Desktop */}
         <div className="onglets">
           <button
             className={`onglet ${onglet === 'commandes' ? 'active' : ''}`}

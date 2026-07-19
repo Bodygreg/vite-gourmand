@@ -338,4 +338,16 @@
   .step-line {
     width: 50px;
   }
+
+  .commande-nav {
+    flex-direction: column-reverse;
+    gap: 0.8rem;
+  }
+
+  .commande-nav .btn-primaire,
+  .commande-nav .btn-outline {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
 }

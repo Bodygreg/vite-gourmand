@@ -1,20 +1,30 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './Navbar.css'
 
 const Navbar = () => {
   const { isAuthenticated, user, logout, hasRole } = useAuth()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
-
+  const navRef = useRef(null)
   const handleLogout = () => {
     logout()
     navigate('/')
   }
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (navRef.current && !navRef.current.contains(e.target)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
   return (
-    <nav className="navbar">
+    <nav className="navbar" ref={navRef}>
       <div className="navbar-container">
 
         {/* Logo */}
@@ -73,9 +83,14 @@ const Navbar = () => {
           )}
           <li className="navbar-auth-mobile">
             {isAuthenticated ? (
-              <button className="btn-danger" onClick={() => { handleLogout(); setMenuOpen(false) }}>
-                Déconnexion
-              </button>
+              <div>
+                <p style={{ color: 'var(--texte-secondaire)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
+                  Bonjour {user?.prenom} !
+                </p>
+                <button className="btn-danger" onClick={() => { handleLogout(); setMenuOpen(false) }}>
+                  Déconnexion
+                </button>
+              </div>
             ) : (
               <NavLink to="/login" onClick={() => setMenuOpen(false)}>
                 <button className="btn-primaire">Connexion</button>

@@ -116,3 +116,16 @@ h1, h2, h3 {
   font-weight: 600;
   cursor: pointer;
 }
+
+@media screen and (orientation: landscape) and (max-width: 768px) {
+  body {
+    transform: rotate(-90deg);
+    transform-origin: left top;
+    width: 100vh;
+    height: 100vw;
+    overflow-x: hidden;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+}

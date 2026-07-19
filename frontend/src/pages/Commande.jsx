@@ -19,6 +19,8 @@ const Commande = () => {
 
   const [horaires, setHoraires] = useState([])
 
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
+
   const formatDate = (date) => {
     if (!date) return ''
     const d = new Date(date)
@@ -28,6 +30,8 @@ const Commande = () => {
       year: 'numeric'
     })
   }
+
+  const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
   useEffect(() => {
     Promise.all([
@@ -97,8 +101,8 @@ const Commande = () => {
   const menuSelectionne = menus.find(m => m.menu_id === parseInt(formData.menu_id))
 
   // Calcul prix
-const calculPrix = () => {
-  if (!menuSelectionne) return { prix_menu: 0, prix_livraison: 5, total: 5 }
+  const calculPrix = () => {
+    if (!menuSelectionne) return { prix_menu: 0, prix_livraison: 5, total: 5 }
 
   let prix_unitaire = menuSelectionne.prix
   
@@ -274,6 +278,7 @@ const calculPrix = () => {
                     return
                   }
                   setError('')
+                  scrollTop()
                   setEtape(2)
                 }}
                 disabled={
@@ -374,7 +379,10 @@ const calculPrix = () => {
               </button>
               <button
                 className="btn-primaire"
-                onClick={() => setEtape(3)}
+                onClick={() => {
+                  scrollTop()
+                  setEtape(3)                
+                }}
                 disabled={
                   !formData.menu_id || 
                   !menuSelectionne ||
@@ -449,7 +457,10 @@ const calculPrix = () => {
               </button>
               <button
                 className="btn-primaire"
-                onClick={handleSubmit}
+                onClick={() => {
+                  handleSubmit()
+                  scrollTop()                
+                }}
                 disabled={loading}
               >
                 {loading ? 'Traitement...' : '✓ Confirmer la commande'}
