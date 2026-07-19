@@ -63,8 +63,7 @@ const Navbar = () => {
                 Espace employé
               </NavLink>
             </li>
-          )}
-
+          )}          
           {hasRole(['administrateur']) && (
             <li>
               <NavLink to="/espace-admin" onClick={() => setMenuOpen(false)}>
@@ -72,6 +71,17 @@ const Navbar = () => {
               </NavLink>
             </li>
           )}
+          <li className="navbar-auth-mobile">
+            {isAuthenticated ? (
+              <button className="btn-danger" onClick={() => { handleLogout(); setMenuOpen(false) }}>
+                Déconnexion
+              </button>
+            ) : (
+              <NavLink to="/login" onClick={() => setMenuOpen(false)}>
+                <button className="btn-primaire">Connexion</button>
+              </NavLink>
+            )}
+          </li>
         </ul>
 
         {/* Bouton connexion/déconnexion */}
