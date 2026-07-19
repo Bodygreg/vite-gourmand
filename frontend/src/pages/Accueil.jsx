@@ -35,7 +35,7 @@ const Accueil = () => {
           <div className="qsn-grid">
             <div className="qsn-image">
               <img 
-                src="https://images.unsplash.com/photo-1581299894007-aaa50297cf16?w=600" 
+                src="https://res.cloudinary.com/kofjf7cu/image/upload/v1784456317/premium_photo-1663089236650-3efc51597de5_m4u8os.avif" 
                 alt="Notre équipe en cuisine"
               />
             </div>
