@@ -75,9 +75,9 @@
   cursor: pointer;
 }
 
-.navbar-auth-mobile {
+.navbar-links .navbar-auth-mobile {
   display: none !important;
-  }
+}
 
 @media (max-width: 768px) {
   .navbar-burger {
@@ -105,10 +105,10 @@
     display: none;
   }
 
-  .navbar-auth-mobile {
+  .navbar-links.open .navbar-auth-mobile {
     display: block !important;
     padding-top: 0.5rem;
     border-top: 1px solid rgba(200, 135, 58, 0.2);
     margin-top: 0.5rem;
-    }
+  }
 }

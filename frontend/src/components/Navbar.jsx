@@ -91,7 +91,7 @@ const Navbar = () => {
                 <p style={{ color: 'var(--texte-secondaire)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
                   Bonjour {user?.prenom} !
                 </p>
-                <button className="btn-danger" onClick={() => { handleLogout(); setMenuOpen(false) }}>
+                <button className="btn-outline" onClick={() => { handleLogout(); setMenuOpen(false) }}>
                   Déconnexion
                 </button>
               </div>
