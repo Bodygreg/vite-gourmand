@@ -63,13 +63,13 @@ MYSQL_USER=vite_user
 MYSQL_PASSWORD=vite2026
 MYSQL_DATABASE=vite_gourmand
 MYSQL_PORT=3309
-MONGODB_URI=mongodb+srv://vite_user:vite2026@vite-gourmand.be2n4pi.mongodb.net/vite_gourmand?appName=vite-gourmand
-RESEND_API_KEY=re_YDNiT33k_7CQ3KzHSNxAG1McFMa11p6R6
-EMAIL_TO=bodygreg@yahoo.fr
+MONGODB_URI=mongodb+srv://USER:PASSWORD@cluster.mongodb.net/vite_gourmand
+RESEND_API_KEY=re_VOTRE_CLE_RESEND
+EMAIL_TO=votre@email.com
 FRONTEND_URL=http://localhost:5173
-CLOUDINARY_CLOUD_NAME=kofjf7cu
-CLOUDINARY_API_KEY=673318191878876
-CLOUDINARY_API_SECRET=rGiO_-IYL8rQ2X-wlkuhqaQEqpU
+CLOUDINARY_CLOUD_NAME=votre_cloud_name
+CLOUDINARY_API_KEY=votre_api_key
+CLOUDINARY_API_SECRET=votre_api_secret
 ```
 
 Créer l'utilisateur MySQL dédié (dans phpMyAdmin → SQL) :
