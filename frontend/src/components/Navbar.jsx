@@ -32,15 +32,12 @@ const Navbar = () => {
     <nav className="navbar" ref={navRef}>
       <div className="navbar-container">
 
-        {/* Logo */}
         <Link to="/" className="navbar-logo">Vite & Gourmand</Link>
 
-        {/* Burger */}
         <button className="navbar-burger" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? '✕' : '≡'}
         </button>
 
-        {/* Liens navigation */}
         <ul className={`navbar-links ${menuOpen ? 'open' : ''}`}>
           <li><NavLink to="/" end onClick={() => setMenuOpen(false)}>Accueil</NavLink></li>
           <li><NavLink to="/menus" onClick={() => setMenuOpen(false)}>Nos menus</NavLink></li>
@@ -54,8 +51,6 @@ const Navbar = () => {
           {hasRole(['administrateur']) && (
             <li><NavLink to="/espace-admin" onClick={() => setMenuOpen(false)}>Admin</NavLink></li>
           )}
-
-          {/* Auth — visible seulement dans le burger mobile */}
           <li className="navbar-auth-burger">
             {isAuthenticated ? (
               <div>
@@ -72,7 +67,6 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* Auth desktop */}
         <div className="navbar-auth">
           {isAuthenticated ? (
             <div className="navbar-user">
