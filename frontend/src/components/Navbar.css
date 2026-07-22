@@ -93,6 +93,10 @@
   flex-shrink: 0;
 }
 
+.navbar-bonjour-mobile {
+  display: none;
+}
+
 /* ── RESPONSIVE MOBILE ───────────────────────────── */
 @media (max-width: 768px) {
 
@@ -141,5 +145,13 @@
   .navbar-bonjour {
     color: var(--texte-secondaire);
     font-size: 0.9rem;
+  }
+
+  .navbar-bonjour-mobile {
+    display: block;
+    color: var(--texte-secondaire);
+    font-size: 0.85rem;
+    flex: 1;
+    text-align: center;
   }
 }

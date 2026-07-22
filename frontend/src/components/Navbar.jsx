@@ -119,6 +119,13 @@ const Navbar = () => {
           )}
         </div>
 
+        {/* Bonjour mobile — toujours visible sur mobile si connecté */}
+        {isAuthenticated && (
+          <span className="navbar-bonjour-mobile">
+            Bonjour {user?.prenom} !
+          </span>
+        )}
+
       </div>
     </nav>
   )
