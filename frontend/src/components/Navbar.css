@@ -65,7 +65,12 @@
   font-size: 0.9rem;
 }
 
-/* ── BURGER (mobile) ─────────────────────────── */
+/* Auth mobile — caché par défaut */
+.navbar-auth-mobile {
+  display: none;
+}
+
+/* ── BURGER ──────────────────────────────────── */
 .navbar-burger {
   display: none;
   background: none;
@@ -75,13 +80,14 @@
   cursor: pointer;
 }
 
-.navbar-links .navbar-auth-mobile {
-  display: none !important;
-}
-
+/* ── RESPONSIVE ──────────────────────────────── */
 @media (max-width: 768px) {
   .navbar-burger {
     display: block;
+  }
+
+  .navbar-auth {
+    display: none;
   }
 
   .navbar-links {
@@ -95,20 +101,38 @@
     padding: 1rem 2rem;
     gap: 1rem;
     border-bottom: 1px solid rgba(200, 135, 58, 0.2);
+    z-index: 99;
   }
 
   .navbar-links.open {
     display: flex;
   }
 
-  .navbar-auth {
+  .navbar-auth-mobile {
     display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: var(--fond-principal);
+    flex-direction: column;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid rgba(200, 135, 58, 0.2);
+    z-index: 98;
   }
 
-  .navbar-links.open .navbar-auth-mobile {
-    display: block !important;
-    padding-top: 0.5rem;
-    border-top: 1px solid rgba(200, 135, 58, 0.2);
-    margin-top: 0.5rem;
+  .navbar-auth-mobile.open {
+    display: flex;
+  }
+
+  .navbar-auth-mobile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .navbar-bonjour {
+    color: var(--texte-secondaire);
+    font-size: 0.9rem;
   }
 }

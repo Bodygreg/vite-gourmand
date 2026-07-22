@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useState, useEffect, useRef } from 'react'
 import './Navbar.css'
@@ -8,6 +8,7 @@ const Navbar = () => {
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const navRef = useRef(null)
+
   const handleLogout = () => {
     logout()
     navigate('/')
@@ -32,88 +33,51 @@ const Navbar = () => {
       <div className="navbar-container">
 
         {/* Logo */}
-        <NavLink to="/" className="navbar-logo">
-          Vite & Gourmand
-        </NavLink>
+        <Link to="/" className="navbar-logo">Vite & Gourmand</Link>
 
-        {/* Menu burger (mobile) */}
-        <button 
-          className="navbar-burger"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+        {/* Burger */}
+        <button className="navbar-burger" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? '✕' : '≡'}
         </button>
 
         {/* Liens navigation */}
         <ul className={`navbar-links ${menuOpen ? 'open' : ''}`}>
-          <li>
-            <NavLink to="/" onClick={() => setMenuOpen(false)}>
-              Accueil
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/menus" onClick={() => setMenuOpen(false)}>
-              Nos menus
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/contact" onClick={() => setMenuOpen(false)}>
-              Contact
-            </NavLink>
-          </li>
-
-          {/* Liens selon le rôle */}
+          <li><NavLink to="/" end onClick={() => setMenuOpen(false)}>Accueil</NavLink></li>
+          <li><NavLink to="/menus" onClick={() => setMenuOpen(false)}>Nos menus</NavLink></li>
+          <li><NavLink to="/contact" onClick={() => setMenuOpen(false)}>Contact</NavLink></li>
           {isAuthenticated && (
-            <li>
-              <NavLink to="/mon-espace" onClick={() => setMenuOpen(false)}>
-                Mon espace
-              </NavLink>
-            </li>
+            <li><NavLink to="/mon-espace" onClick={() => setMenuOpen(false)}>Mon espace</NavLink></li>
           )}
-
           {hasRole(['employe', 'administrateur']) && (
-            <li>
-              <NavLink to="/espace-employe" onClick={() => setMenuOpen(false)}>
-                Espace employé
-              </NavLink>
-            </li>
-          )}          
-          {hasRole(['administrateur']) && (
-            <li>
-              <NavLink to="/espace-admin" onClick={() => setMenuOpen(false)}>
-                Admin
-              </NavLink>
-            </li>
+            <li><NavLink to="/espace-employe" onClick={() => setMenuOpen(false)}>Espace employé</NavLink></li>
           )}
-          <li className="navbar-auth-mobile">
-            {isAuthenticated ? (
-              <div>
-                <p style={{ color: 'var(--texte-secondaire)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                  Bonjour {user?.prenom} !
-                </p>
-                <button className="btn-outline" onClick={() => { handleLogout(); setMenuOpen(false) }}>
-                  Déconnexion
-                </button>
-              </div>
-            ) : (
-              <NavLink to="/login" onClick={() => setMenuOpen(false)}>
-                <button className="btn-primaire">Connexion</button>
-              </NavLink>
-            )}
-          </li>
+          {hasRole(['administrateur']) && (
+            <li><NavLink to="/espace-admin" onClick={() => setMenuOpen(false)}>Admin</NavLink></li>
+          )}
         </ul>
 
-        {/* Bouton connexion/déconnexion */}
+        {/* Auth mobile */}
+        <div className={`navbar-auth-mobile ${menuOpen ? 'open' : ''}`}>
+          {isAuthenticated ? (
+            <div className="navbar-auth-mobile-content">
+              <p className="navbar-bonjour">Bonjour {user?.prenom} !</p>
+              <button className="btn-outline" onClick={() => { handleLogout(); setMenuOpen(false) }}>
+                Déconnexion
+              </button>
+            </div>
+          ) : (
+            <NavLink to="/login" onClick={() => setMenuOpen(false)}>
+              <button className="btn-primaire">Connexion</button>
+            </NavLink>
+          )}
+        </div>
+
+        {/* Auth desktop */}
         <div className="navbar-auth">
           {isAuthenticated ? (
             <div className="navbar-user">
               <span>Bonjour {user?.prenom}</span>
-              <button 
-                className="btn-outline"
-                onClick={handleLogout}
-              >
-                Déconnexion
-              </button>
+              <button className="btn-outline" onClick={handleLogout}>Déconnexion</button>
             </div>
           ) : (
             <NavLink to="/login">
