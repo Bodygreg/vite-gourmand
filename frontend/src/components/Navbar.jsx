@@ -54,23 +54,23 @@ const Navbar = () => {
           {hasRole(['administrateur']) && (
             <li><NavLink to="/espace-admin" onClick={() => setMenuOpen(false)}>Admin</NavLink></li>
           )}
-        </ul>
 
-        {/* Auth mobile */}
-        <div className={`navbar-auth-mobile ${menuOpen ? 'open' : ''}`}>
-          {isAuthenticated ? (
-            <div className="navbar-auth-mobile-content">
-              <p className="navbar-bonjour">Bonjour {user?.prenom} !</p>
-              <button className="btn-outline" onClick={() => { handleLogout(); setMenuOpen(false) }}>
-                Déconnexion
-              </button>
-            </div>
-          ) : (
-            <NavLink to="/login" onClick={() => setMenuOpen(false)}>
-              <button className="btn-primaire">Connexion</button>
-            </NavLink>
-          )}
-        </div>
+          {/* Auth — visible seulement dans le burger mobile */}
+          <li className="navbar-auth-burger">
+            {isAuthenticated ? (
+              <div>
+                <p className="navbar-bonjour">Bonjour {user?.prenom} !</p>
+                <button className="btn-outline" onClick={() => { handleLogout(); setMenuOpen(false) }}>
+                  Déconnexion
+                </button>
+              </div>
+            ) : (
+              <NavLink to="/login" onClick={() => setMenuOpen(false)}>
+                <button className="btn-primaire">Connexion</button>
+              </NavLink>
+            )}
+          </li>
+        </ul>
 
         {/* Auth desktop */}
         <div className="navbar-auth">

@@ -66,7 +66,7 @@
 }
 
 /* Auth mobile — caché par défaut */
-.navbar-auth-mobile {
+.navbar-auth-burger {
   display: none;
 }
 
@@ -82,57 +82,16 @@
 
 /* ── RESPONSIVE ──────────────────────────────── */
 @media (max-width: 768px) {
-  .navbar-burger {
+  .navbar-auth-burger {
     display: block;
-  }
-
-  .navbar-auth {
-    display: none;
-  }
-
-  .navbar-links {
-    display: none;
-    position: absolute;
-    top: 70px;
-    left: 0;
-    right: 0;
-    background-color: var(--fond-principal);
-    flex-direction: column;
-    padding: 1rem 2rem;
-    gap: 1rem;
-    border-bottom: 1px solid rgba(200, 135, 58, 0.2);
-    z-index: 99;
-  }
-
-  .navbar-links.open {
-    display: flex;
-  }
-
-  .navbar-auth-mobile {
-    display: none;
-    position: absolute;
-    top: 70px;
-    left: 0;
-    right: 0;
-    background-color: var(--fond-principal);
-    flex-direction: column;
-    padding: 1rem 2rem;
-    border-bottom: 1px solid rgba(200, 135, 58, 0.2);
-    z-index: 98;
-  }
-
-  .navbar-auth-mobile.open {
-    display: flex;
-  }
-
-  .navbar-auth-mobile-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(200, 135, 58, 0.2);
+    margin-top: 0.5rem;
   }
 
   .navbar-bonjour {
     color: var(--texte-secondaire);
     font-size: 0.9rem;
+    margin-bottom: 0.5rem;
   }
 }
