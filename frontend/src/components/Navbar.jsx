@@ -96,8 +96,7 @@ const Navbar = () => {
           {/* Connexion/Déconnexion — visible uniquement dans le burger mobile */}
           <li className="navbar-mobile-auth">
             {isAuthenticated ? (
-              <>
-                <span className="navbar-bonjour">Bonjour {user?.prenom} !</span>
+              <>                
                 <button className="btn-outline" onClick={handleLogout}>
                   Déconnexion
                 </button>
