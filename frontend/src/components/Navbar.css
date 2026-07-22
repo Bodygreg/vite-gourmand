@@ -1,3 +1,4 @@
+/* ── NAVBAR ──────────────────────────────────────── */
 .navbar {
   background-color: var(--fond-principal);
   height: 70px;
@@ -15,20 +16,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 
+/* ── LOGO ────────────────────────────────────────── */
 .navbar-logo {
   font-family: 'Playfair Display', serif;
   font-size: 1.4rem;
   font-weight: 700;
   color: var(--accent-ambre);
   text-decoration: none;
+  flex-shrink: 0;
 }
 
+/* ── LIENS DESKTOP ───────────────────────────────── */
 .navbar-links {
   display: flex;
   list-style: none;
   gap: 2rem;
+  margin: 0;
+  padding: 0;
+  align-items: center;
 }
 
 .navbar-links a {
@@ -49,9 +57,11 @@
   color: var(--bouton-hover);
 }
 
+/* ── AUTH DESKTOP ────────────────────────────────── */
 .navbar-auth {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .navbar-user {
@@ -65,12 +75,12 @@
   font-size: 0.9rem;
 }
 
-/* Auth mobile — caché par défaut */
-.navbar-auth-burger {
+/* ── AUTH MOBILE (dans le burger) ────────────────── */
+.navbar-mobile-auth {
   display: none;
 }
 
-/* ── BURGER ──────────────────────────────────── */
+/* ── BURGER ──────────────────────────────────────── */
 .navbar-burger {
   display: none;
   background: none;
@@ -78,20 +88,58 @@
   color: var(--accent-ambre);
   font-size: 1.8rem;
   cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
-/* ── RESPONSIVE ──────────────────────────────── */
+/* ── RESPONSIVE MOBILE ───────────────────────────── */
 @media (max-width: 768px) {
-  .navbar-auth-burger {
+
+  /* Affiche le burger */
+  .navbar-burger {
     display: block;
+  }
+
+  /* Cache l'auth desktop */
+  .navbar-auth {
+    display: none;
+  }
+
+  /* Cache les liens par défaut */
+  .navbar-links {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background-color: var(--fond-principal);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 2rem;
+    gap: 1rem;
+    border-bottom: 1px solid rgba(200, 135, 58, 0.2);
+    z-index: 99;
+  }
+
+  /* Affiche les liens quand burger ouvert */
+  .navbar-links.open {
+    display: flex;
+  }
+
+  /* Affiche l'auth dans le burger */
+  .navbar-mobile-auth {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     padding-top: 0.5rem;
     border-top: 1px solid rgba(200, 135, 58, 0.2);
-    margin-top: 0.5rem;
+    margin-top: 0.2rem;
+    width: 100%;
   }
 
   .navbar-bonjour {
     color: var(--texte-secondaire);
     font-size: 0.9rem;
-    margin-bottom: 0.5rem;
   }
 }

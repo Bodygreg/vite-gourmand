@@ -12,6 +12,7 @@ const Navbar = () => {
   const handleLogout = () => {
     logout()
     navigate('/')
+    setMenuOpen(false)
   }
 
   useEffect(() => {
@@ -32,33 +33,68 @@ const Navbar = () => {
     <nav className="navbar" ref={navRef}>
       <div className="navbar-container">
 
-        <Link to="/" className="navbar-logo">Vite & Gourmand</Link>
+        {/* Logo */}
+        <Link to="/" className="navbar-logo">
+          Vite & Gourmand
+        </Link>
 
-        <button className="navbar-burger" onClick={() => setMenuOpen(!menuOpen)}>
+        {/* Bouton burger — visible uniquement sur mobile */}
+        <button
+          className="navbar-burger"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Menu"
+        >
           {menuOpen ? '✕' : '≡'}
         </button>
 
+        {/* Menu — desktop : horizontal / mobile : dropdown */}
         <ul className={`navbar-links ${menuOpen ? 'open' : ''}`}>
-          <li><NavLink to="/" end onClick={() => setMenuOpen(false)}>Accueil</NavLink></li>
-          <li><NavLink to="/menus" onClick={() => setMenuOpen(false)}>Nos menus</NavLink></li>
-          <li><NavLink to="/contact" onClick={() => setMenuOpen(false)}>Contact</NavLink></li>
+          <li>
+            <NavLink to="/" end onClick={() => setMenuOpen(false)}>
+              Accueil
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/menus" onClick={() => setMenuOpen(false)}>
+              Nos menus
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/contact" onClick={() => setMenuOpen(false)}>
+              Contact
+            </NavLink>
+          </li>
           {isAuthenticated && (
-            <li><NavLink to="/mon-espace" onClick={() => setMenuOpen(false)}>Mon espace</NavLink></li>
+            <li>
+              <NavLink to="/mon-espace" onClick={() => setMenuOpen(false)}>
+                Mon espace
+              </NavLink>
+            </li>
           )}
           {hasRole(['employe', 'administrateur']) && (
-            <li><NavLink to="/espace-employe" onClick={() => setMenuOpen(false)}>Espace employé</NavLink></li>
+            <li>
+              <NavLink to="/espace-employe" onClick={() => setMenuOpen(false)}>
+                Espace employé
+              </NavLink>
+            </li>
           )}
           {hasRole(['administrateur']) && (
-            <li><NavLink to="/espace-admin" onClick={() => setMenuOpen(false)}>Admin</NavLink></li>
+            <li>
+              <NavLink to="/espace-admin" onClick={() => setMenuOpen(false)}>
+                Admin
+              </NavLink>
+            </li>
           )}
-          <li className="navbar-auth-burger">
+
+          {/* Connexion/Déconnexion — visible uniquement dans le burger mobile */}
+          <li className="navbar-mobile-auth">
             {isAuthenticated ? (
-              <div>
-                <p className="navbar-bonjour">Bonjour {user?.prenom} !</p>
-                <button className="btn-outline" onClick={() => { handleLogout(); setMenuOpen(false) }}>
+              <>
+                <span className="navbar-bonjour">Bonjour {user?.prenom} !</span>
+                <button className="btn-outline" onClick={handleLogout}>
                   Déconnexion
                 </button>
-              </div>
+              </>
             ) : (
               <NavLink to="/login" onClick={() => setMenuOpen(false)}>
                 <button className="btn-primaire">Connexion</button>
@@ -67,11 +103,14 @@ const Navbar = () => {
           </li>
         </ul>
 
+        {/* Connexion/Déconnexion — visible uniquement sur desktop */}
         <div className="navbar-auth">
           {isAuthenticated ? (
             <div className="navbar-user">
               <span>Bonjour {user?.prenom}</span>
-              <button className="btn-outline" onClick={handleLogout}>Déconnexion</button>
+              <button className="btn-outline" onClick={handleLogout}>
+                Déconnexion
+              </button>
             </div>
           ) : (
             <NavLink to="/login">
