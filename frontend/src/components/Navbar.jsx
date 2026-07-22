@@ -38,6 +38,13 @@ const Navbar = () => {
           Vite & Gourmand
         </Link>
 
+          {/* Bonjour mobile — toujours visible sur mobile si connecté */}
+        {isAuthenticated && (
+          <span className="navbar-bonjour-mobile">
+            Bonjour {user?.prenom} !
+          </span>
+        )}
+
         {/* Bouton burger — visible uniquement sur mobile */}
         <button
           className="navbar-burger"
@@ -118,14 +125,6 @@ const Navbar = () => {
             </NavLink>
           )}
         </div>
-
-        {/* Bonjour mobile — toujours visible sur mobile si connecté */}
-        {isAuthenticated && (
-          <span className="navbar-bonjour-mobile">
-            Bonjour {user?.prenom} !
-          </span>
-        )}
-
       </div>
     </nav>
   )
