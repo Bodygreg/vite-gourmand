@@ -51,7 +51,10 @@ const Navbar = () => {
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Menu"
         >
-          {menuOpen ? '✕' : '≡'}
+          {menuOpen 
+            ? <span style={{ fontSize: '1.4rem' }}>✕</span>  /* ← croix plus petite */
+            : '≡'
+          }
         </button>
 
         {/* Menu — desktop : horizontal / mobile : dropdown */}
