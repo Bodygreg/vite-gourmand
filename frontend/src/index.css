@@ -117,15 +117,11 @@ h1, h2, h3 {
   cursor: pointer;
 }
 
-@media screen and (orientation: landscape) and (max-width: 768px) {
-  body {
-    transform: rotate(-90deg);
-    transform-origin: left top;
-    width: 100vh;
-    height: 100vw;
-    overflow-x: hidden;
-    position: absolute;
-    top: 100%;
-    left: 0;
-  }
+.loading {
+  min-height: calc(100vh - 70px - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--texte-secondaire);
+  font-size: 1.1rem;
 }
