@@ -376,7 +376,7 @@
   .onglets-mobile {
     display: block;
   }
-  .onglets-desktop {
+  .onglets {
     display: none;
   }
 }
