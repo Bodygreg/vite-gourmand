@@ -123,7 +123,7 @@ const Accueil = () => {
               <p className="no-avis">Aucun avis pour le moment.</p>
             )}
           </div>
-          <Link to="/menus">
+          <Link to="/avis">
             <button className="btn-outline">Voir plus d'avis</button>
           </Link>
         </div>

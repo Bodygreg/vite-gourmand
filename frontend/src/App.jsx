@@ -15,6 +15,10 @@ import EspaceAdmin from './pages/EspaceAdmin'
 import Contact from './pages/Contact'
 import ResetPassword from './pages/ResetPassword'
 import ForgotPassword from './pages/ForgotPassword'
+import MentionsLegales from './pages/MentionsLegales'
+import CGV from './pages/CGV'
+import Confidentialite from './pages/Confidentialite'
+import Avis from './pages/Avis'
 
 // Composants
 import Navbar from './components/Navbar'
@@ -55,6 +59,10 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
+          <Route path="/cgv" element={<CGV />} />
+          <Route path="/confidentialite" element={<Confidentialite />} />
+          <Route path="/avis" element={<Avis />} />
 
           {/* Routes utilisateur connecté */}
           <Route path="/commande" element={

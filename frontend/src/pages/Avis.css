@@ -1,0 +1,105 @@
+/* ── BANDEAU ─────────────────────────────────────── */
+.avis-page {
+  background-color: var(--fond-secondaire);
+  min-height: calc(100vh - 70px - 200px);
+}
+
+.avis-bandeau {
+  background-color: var(--fond-principal);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.avis-bandeau h1 {
+  color: var(--accent-ambre);
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.avis-moyenne {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.moyenne-note {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--accent-ambre);
+  font-family: 'Playfair Display', serif;
+}
+
+.etoiles-moyenne {
+  color: var(--accent-ambre);
+  font-size: 1.4rem;
+}
+
+.nb-avis {
+  color: var(--texte-secondaire);
+  font-size: 0.9rem;
+}
+
+/* ── LISTE AVIS ──────────────────────────────────── */
+.avis-liste {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  padding: 3rem 0;
+}
+
+.avis-card-full {
+  background-color: var(--fond-principal);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(200, 135, 58, 0.15);
+}
+
+.avis-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.avis-auteur {
+  color: var(--texte-principal);
+  font-weight: 600;
+  margin-right: 0.8rem;
+}
+
+.avis-date {
+  color: var(--texte-secondaire);
+  font-size: 0.85rem;
+}
+
+.avis-etoiles-detail {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.avis-texte {
+  color: var(--texte-principal);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.no-avis {
+  text-align: center;
+  color: var(--texte-secondaire);
+  padding: 4rem 0;
+  font-size: 1.1rem;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 1100px) {
+  .avis-liste {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .avis-liste {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
