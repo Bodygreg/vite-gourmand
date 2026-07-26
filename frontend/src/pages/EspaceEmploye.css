@@ -320,13 +320,14 @@
   cursor: pointer;
 }
 
-.onglets-mobile {
-  display: none;
+.onglets-mobile {  
   position: relative;
   margin-bottom: 1.5rem;
 }
 
 .onglets-burger {
+  display: flex;
+  justify-content: space-between;
   width: 100%;
   padding: 0.8rem 1rem;
   background-color: var(--fond-principal);

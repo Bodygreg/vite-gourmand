@@ -283,7 +283,8 @@ const EspaceEmploye = () => {
             className="onglets-burger"
             onClick={() => setOngletMenuOpen(!ongletMenuOpen)}
           >
-            {onglet.charAt(0).toUpperCase() + onglet.slice(1)} {ongletMenuOpen ? '▼' : '▲'}
+            <span>{onglet.charAt(0).toUpperCase() + onglet.slice(1)}</span>
+            <span>{ongletMenuOpen ? '▲' : '▼'}</span>
           </button>
           {ongletMenuOpen && (
             <div className="onglets-dropdown">
