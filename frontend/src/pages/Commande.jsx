@@ -136,6 +136,7 @@ const Commande = () => {
         nb_personnes: parseInt(formData.nb_personnes)
       })
       setSuccess(res.data)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
       setError(err.response?.data?.message || 'Erreur lors de la commande')
     } finally {
@@ -152,7 +153,7 @@ const Commande = () => {
 
   if (success) {
     return (
-      <div className="commande-page">
+      <div className="commande-page commande-success-page" style={{ minHeight: 'calc(100vh - 70px - 200px)' }}>
         <div className="commande-success">
           <h1><Check size={40}/> Commande confirmée !</h1>
           <p>Votre commande a bien été enregistrée.</p>
@@ -455,10 +456,7 @@ const Commande = () => {
               </button>
               <button
                 className="btn-primaire"
-                onClick={() => {
-                  handleSubmit()
-                  scrollTop()                
-                }}
+                onClick={handleSubmit}
                 disabled={loading}
               >
                 {loading ? 'Traitement...' : '✓ Confirmer la commande'}

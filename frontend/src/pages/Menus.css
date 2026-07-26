@@ -192,7 +192,8 @@
     grid-template-columns: repeat(2, 1fr);
   }
   .filtres-grid {
-    grid-template-columns: repeat(3, 1fr);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -201,6 +202,7 @@
     grid-template-columns: 1fr;
   }
   .filtres-grid {
-    grid-template-columns: 1fr 1fr;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
   }
 }
