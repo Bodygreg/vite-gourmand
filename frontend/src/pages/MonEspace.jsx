@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { Package, User, Star } from 'lucide-react'
 import api from '../utils/axios'
 import './MonEspace.css'
+import { useNavigate } from 'react-router-dom'
 
 const MonEspace = () => {
   const { user } = useAuth()
@@ -12,6 +13,21 @@ const MonEspace = () => {
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
   const [mesAvis, setMesAvis] = useState([])
+
+  const { logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleSupprimerCompte = async () => {
+    if (!window.confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) return
+    
+    try {
+      await api.delete('/utilisateurs/compte')
+      logout()
+      navigate('/')
+    } catch (err) {
+      alert(err.response?.data?.message || 'Erreur lors de la suppression')
+    }
+  }
   
   useEffect(() => {
   Promise.all([
@@ -223,6 +239,18 @@ const MonEspace = () => {
               <button type="submit" className="btn-primaire">
                 Sauvegarder
               </button>
+              <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(217, 79, 61, 0.3)' }}>
+                <p style={{ color: 'var(--texte-secondaire)', fontSize: '0.9rem', marginBottom: '1rem' }}>
+                  Zone de danger — cette action est irréversible.
+                </p>
+                <button
+                  type="button"
+                  className="btn-danger"
+                  onClick={handleSupprimerCompte}
+                >
+                  Supprimer mon compte
+                </button>
+              </div>
             </form>
           </div>
         )}
