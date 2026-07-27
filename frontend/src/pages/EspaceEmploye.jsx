@@ -302,7 +302,7 @@ const EspaceEmploye = () => {
         </div>
 
         {/* Onglets Desktop */}
-        <div className="onglets">
+        <div className="onglets onglets-desktop">
           <button
             className={`onglet ${onglet === 'commandes' ? 'active' : ''}`}
             onClick={() => setOnglet('commandes')}

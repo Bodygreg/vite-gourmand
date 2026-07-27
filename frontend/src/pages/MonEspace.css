@@ -12,7 +12,7 @@
 .mon-espace h1 {
   color: var(--texte-sombre);
   font-size: 2rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 2rem;
 }
 
 .espace-subtitle {
@@ -119,13 +119,16 @@
 
 /* ── EMPTY STATE ─────────────────────────────────── */
 .empty-state {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center
   padding: 4rem 0;
   color: var(--texte-secondaire);
 }
 
 .empty-state p {
-  margin: 1rem 0;
+  margin: 2rem 0;
   font-size: 1.1rem;
 }
 
@@ -201,9 +204,5 @@
   .commande-item-infos {
     flex-direction: column;
     gap: 0.5rem;
-  }
-
-  .onglet span {
-    display: none;
   }
 }

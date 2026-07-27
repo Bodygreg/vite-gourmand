@@ -11,22 +11,26 @@ const MonEspace = () => {
   const [profil, setProfil] = useState(null)
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
-
+  const [mesAvis, setMesAvis] = useState([])
+  
   useEffect(() => {
-    Promise.all([
-      api.get('/commandes/mes-commandes'),
-      api.get('/utilisateurs/profil')
-    ])
-      .then(([commandesRes, profilRes]) => {
-        setCommandes(commandesRes.data)
-        setProfil(profilRes.data)
-        setLoading(false)
-      })
-      .catch(err => {
-        console.error(err)
-        setLoading(false)
+  Promise.all([
+    api.get('/commandes/mes-commandes'),
+    api.get('/utilisateurs/profil'),
+    api.get('/avis/mes-avis')
+  ])
+    .then(([commandesRes, profilRes, avisRes]) => {
+      setCommandes(commandesRes.data)
+      setProfil(profilRes.data)
+      setMesAvis(avisRes.data.map(a => a.commande_id))
+      setLoading(false)
+    })
+    .catch(err => {
+      console.error(err)
+      setLoading(false)
       })
   }, [])
+
 
   const handleUpdateProfil = async (e) => {
     e.preventDefault()
@@ -71,7 +75,7 @@ const MonEspace = () => {
     <div className="mon-espace">
       <div className="container">
         <h1>Mon espace</h1>
-        <p className="espace-subtitle">Bonjour {user?.prenom} !</p>
+        
 
         {/* Onglets */}
         <div className="onglets">
@@ -134,9 +138,11 @@ const MonEspace = () => {
                       <button
                         className="btn-outline"
                         onClick={() => setOnglet(`avis-${c.commande_id}`)}
+                        disabled={mesAvis.includes(c.commande_id)}
+                        style={mesAvis.includes(c.commande_id) ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
                       >
                         <Star size={16} />
-                        Laisser un avis
+                        {mesAvis.includes(c.commande_id) ? 'Avis déjà déposé' : 'Laisser un avis'}
                       </button>
                     </div>
                   )}
