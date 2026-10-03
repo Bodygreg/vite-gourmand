@@ -109,6 +109,11 @@ cd frontend
 npm run dev
 ```
 
+### 7. Docker
+
+Un fichier docker-compose.yml permet de lancer l'environnement complet (MySQL, MongoDB, backend Node.js, frontend React) avec une seule commande docker-compose up -d, sans avoir besoin d'installer XAMPP ou MongoDB localement.
+
+
 L'application est accessible sur http://localhost:5173
 
 ## Comptes de test

@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: vite-gourmand-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: vite_gourmand
+      MYSQL_USER: vite_user
+      MYSQL_PASSWORD: vite2026
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./database/create.sql:/docker-entrypoint-initdb.d/01-create.sql
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+      - mysql_data:/var/lib/mysql
+
+  mongodb:
+    image: mongo:6.0
+    container_name: vite-gourmand-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  backend:
+    build: ./backend
+    container_name: vite-gourmand-backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MONGODB_URI=mongodb://mongodb:27017/vite_gourmand
+    depends_on:
+      - mysql
+      - mongodb
+
+  frontend:
+    build: ./frontend
+    container_name: vite-gourmand-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:3000/api
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+  mongo_data:
