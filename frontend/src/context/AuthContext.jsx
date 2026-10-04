@@ -1,39 +1,41 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import api from '../utils/axios'
 
 const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
-  const [token, setToken] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Récupérer le token et l'user depuis localStorage au démarrage
-    const savedToken = localStorage.getItem('token')
-    const savedUser = localStorage.getItem('user')
-
-    if (savedToken && savedUser) {
-      setToken(savedToken)
-      setUser(JSON.parse(savedUser))
-    }
-    setLoading(false)
+    // Vérifier si l'utilisateur est connecté au démarrage
+    // en appelant /auth/me — le cookie est envoyé automatiquement
+    api.get('/auth/me')
+      .then(res => {
+        setUser(res.data)
+      })
+      .catch(() => {
+        setUser(null)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [])
 
-  const login = (tokenData, userData) => {
-    localStorage.setItem('token', tokenData)
-    localStorage.setItem('user', JSON.stringify(userData))
-    setToken(tokenData)
+  const login = (userData) => {    
     setUser(userData)
   }
 
-  const logout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
-    setToken(null)
+  const logout = async () => {
+    try {
+      await api.post('/auth/logout')  // efface le cookie côté serveur
+    } catch (err) {
+      console.error('Erreur logout:', err)
+    }
     setUser(null)
   }
 
-  const isAuthenticated = !!token
+  const isAuthenticated = !!user
 
   const hasRole = (roles) => {
     if (!user) return false
@@ -42,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ 
-      user, token, loading,
+      user, loading,
       login, logout, 
       isAuthenticated, hasRole 
     }}>

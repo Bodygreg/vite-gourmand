@@ -1,20 +1,16 @@
 const jwt = require('jsonwebtoken')
 
 const authMiddleware = (req, res, next) => {
-  // Récupérer le token dans le header
-  const authHeader = req.headers.authorization
+  // Récupérer le token depuis le cookie HttpOnly
+  const token = req.cookies?.token
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  if (!token) {
     return res.status(401).json({ 
       message: 'Accès refusé - Token manquant' 
     })
   }
 
-  // Extraire le token
-  const token = authHeader.split(' ')[1]
-
   try {
-    // Vérifier et décoder le token
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
     req.user = decoded
     next()

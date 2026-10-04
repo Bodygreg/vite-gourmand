@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 const pool = require('../config/database')
 const sendEmail = require('../utils/email')
 
-// ── INSCRIPTION ──────────────────────────────────────
 const register = async (req, res) => {
   try {
     const { nom, prenom, email, password, telephone, adresse, ville, code_postal } = req.body
@@ -87,8 +86,15 @@ const login = async (req, res) => {
       { expiresIn: '24h' }
     )
 
+    // ← Stockage dans cookie HttpOnly au lieu de retourner le token
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      maxAge: 24 * 60 * 60 * 1000
+    })
+
     res.json({
-      token,
       user: {
         id: user.utilisateur_id,
         nom: user.nom,
@@ -107,6 +113,7 @@ const login = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur' })
   }
 }
+
 
 // ── INFOS UTILISATEUR CONNECTÉ ────────────────────────
 const getMe = async (req, res) => {

@@ -26,7 +26,8 @@ const Login = () => {
 
     try {
       const res = await api.post('/auth/login', formData)
-      login(res.data.token, res.data.user)
+      login(res.data.user)
+      await new Promise(resolve => setTimeout(resolve, 100))
       navigate(redirect)
     } catch (err) {
       setError(err.response?.data?.message || 'Erreur de connexion')
