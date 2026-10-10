@@ -10,9 +10,8 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Ne pas rediriger si c'est /auth/me (vérification au démarrage)
       const url = error.config?.url || ''
-      if (!url.includes('/auth/me')) {
+      if (!url.includes('/auth/me') && !url.includes('/auth/login')) {
         window.location.href = '/login'
       }
     }
