@@ -26,6 +26,9 @@ const platRoutes = require('./routes/platRoutes')
 const { authMiddleware, checkRole } = require('./middlewares/authMiddleware')
 
 const app = express()
+
+console.log('Node.js version:', process.version)
+
 const PORT = process.env.PORT || 3000
 
 const { upload, uploadToCloudinary } = require('./config/cloudinary')
