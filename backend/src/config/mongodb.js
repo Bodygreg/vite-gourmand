@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-require('dotenv').config()
+const crypto = require('crypto') // ← ajoute cette ligne
 
 const connectMongoDB = async () => {
   try {
