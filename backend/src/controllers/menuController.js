@@ -94,14 +94,17 @@ const createMenu = async (req, res) => {
   try {
     const { 
       theme_id, regime_id, titre, description, 
-      nb_personnes_min, prix, conditions, stock 
+      nb_personnes_min, prix, conditions, stock,
+      delai_commande, image_url
     } = req.body
 
     const [result] = await pool.query(
       `INSERT INTO menu 
-      (theme_id, regime_id, titre, description, nb_personnes_min, prix, conditions, stock) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [theme_id, regime_id, titre, description, nb_personnes_min, prix, conditions, stock]
+      (theme_id, regime_id, titre, description, nb_personnes_min, prix, conditions, stock,
+       delai_commande, image_url) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [theme_id, regime_id, titre, description, nb_personnes_min, prix, conditions, stock,
+       delai_commande || 48, image_url || null]
     )
 
     res.status(201).json({ 
